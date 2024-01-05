@@ -7,13 +7,13 @@ An OctoPrint plugin for updating the Sailfish firmware on your 3d printer.
 Install via the bundled [Plugin Manager](https://github.com/foosel/OctoPrint/wiki/Plugin:-Plugin-Manager)
 or manually using this URL:
 
-    https://github.com/markwal/octoflashsailfish/archive/master.zip
+    https://github.com/wesk1/octoflashsailfish/archive/master.zip
 
 ## Instructions
 
 FlashSailfish adds a settings panel to OctoPrint where you can set the firmware
 update url (it defaults to
-http://jettyfirmware.yolasite.com/resources/release/firmware.xml) which is the
+http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml) which is the
 firmware update url from the [Sailfish](http://sailfishfirmware.com) website.
 
 To update your firmware, choose the correct printer motherboard and select a
