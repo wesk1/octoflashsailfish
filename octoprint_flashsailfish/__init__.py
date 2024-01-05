@@ -14,16 +14,17 @@ import xmltodict
 
 
 class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
-						  octoprint.plugin.AssetPlugin,
-						  octoprint.plugin.TemplatePlugin,
-						  octoprint.plugin.BlueprintPlugin):
+                          octoprint.plugin.AssetPlugin,
+                          octoprint.plugin.TemplatePlugin,
+                          octoprint.plugin.BlueprintPlugin):
 
 	def __init__(self, *args, **kwargs):
 		self.xml = None
 		self.firmware_info = None
 
 	# ~~ SettingsPlugin mixin
-	def get_settings_defaults(self, *args, **kwargs):
+	@staticmethod
+	def get_settings_defaults(*args, **kwargs):
 		return dict(
 			url="http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml"
 		)
@@ -43,7 +44,7 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 				displayName="Flash Sailfish",
 				displayVersion=self._plugin_version,
 
-				# version check: github repository
+				# version check: gitHub repository
 				type="github_release",
 				user="markwal",
 				repo="octoflashsailfish",
@@ -71,8 +72,9 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 	@restricted_access
 	@admin_permission.require(403)
 	def refresh_firmware_info(self, *args, **kwargs):
-		if not request.json is None and "url" in request.json:
-			self._settings.set(["url"], request.json["url"])
+		url = request.json.get("url")
+		if url:
+			self._settings.set(["url"], url)
 		self.xml = None
 		return self._firmware_info()
 
@@ -81,12 +83,12 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 			url = self._settings.get(["url"])
 			try:
 				self.xml = requests.get(url)
-			except:
+			except requests.exceptions.RequestException as _:
 				self._logger.exception("Unable to retrieve firmware information from {0}".format(url))
 				return make_response("Unable to retrieve firmware information from {0}".format(url), 400)
 			try:
 				self.firmware_info = xmltodict.parse(self.xml.text)
-			except:
+			except requests.exceptions.RequestException as _:
 				self._logger.exception(
 					"Retrieved firmware information from {0}, but was unable to understand the response.".format(url))
 				return make_response(
@@ -117,7 +119,7 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 
 __plugin_name__ = "Flash Sailfish"
 
-__plugin_pythoncom__ = ">=2.7,<4"  # python 2 and 3
+__plugin_pythoncompat__ = ">=2.7,<4,>=3,<4"  # Updated to support Python 3.9
 
 
 def __plugin_load__():
