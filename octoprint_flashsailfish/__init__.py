@@ -119,7 +119,7 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 
 __plugin_name__ = "Flash Sailfish"
 
-# __plugin_pythoncompat__ = ">=2.7,<4,>=3,<4"  # Updated to support Python 3.9
+__plugin_pythoncom__ = ">=2.7,<4"  # Updated to support Python 3.9
 
 
 def __plugin_load__():
