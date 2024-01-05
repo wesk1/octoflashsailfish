@@ -10,7 +10,7 @@ license: AGPLv3
 # TODO
 date: today's date in format YYYY-MM-DD, e.g. 2015-04-21
 
-homepage: https://github.com/wesk1octoflashsailfish
+homepage: https://github.com/wesk1/octoflashsailfish
 source: https://github.com/wesk1/octoflashsailfish
 archive: https://github.com/wesk1/octoflashsailfish/archive/master.zip
 
