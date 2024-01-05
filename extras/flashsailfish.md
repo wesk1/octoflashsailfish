@@ -5,14 +5,14 @@ id: flashsailfish
 title: OctoPrint-FlashSailfish
 description: This plugin checks for updates of the Sailfish firmware and will offer to flash the new firmware onto your printer when a new version is available.
 author: Mark Walker
-license: GPLv3
+license: AGPLv3
 
 # TODO
 date: today's date in format YYYY-MM-DD, e.g. 2015-04-21
 
-homepage: https://github.com/markwal/octoflashsailfish
-source: https://github.com/markwal/octoflashsailfish
-archive: https://github.com/markwal/octoflashsailfish/archive/master.zip
+homepage: https://github.com/wesk1octoflashsailfish
+source: https://github.com/wesk1/octoflashsailfish
+archive: https://github.com/wesk1/octoflashsailfish/archive/master.zip
 
 # TODO set this to true if your plugin uses the dependency_links setup parameter to include
 # library versions not yet published on PyPi. SHOULD ONLY BE USED IF THERE IS NO OTHER OPTION!

@@ -2,7 +2,7 @@
  * View model for OctoPrint-FlashSailfish
  *
  * Author: Mark Walker
- * License: GPLv3
+ * License: AGPLv3
  */
 $(function() {
     function FlashsailfishViewModel(parameters) {

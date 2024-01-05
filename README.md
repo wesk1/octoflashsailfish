@@ -12,8 +12,7 @@ Install manually using this URL:
 
 FlashSailfish adds a settings panel to OctoPrint where you can set the firmware
 update url (it defaults to
-http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml) which is the
-firmware update url from the [Sailfish](http://sailfishfirmware.com) website.
+http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml)
 
 To update your firmware, choose the correct printer motherboard and select a
 version of Sailfish and click the Flash button.
