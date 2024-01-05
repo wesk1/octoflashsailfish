@@ -51,7 +51,7 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 				current=self._plugin_version,
 
 				# update method: pip
-				pip="https://github.com/markwal/octoflashsailfish/archive/{target_version}.zip"
+				pip="https://github.com/wesk1/octoflashsailfish/archive/{target_version}.zip"
 			)
 		)
 
