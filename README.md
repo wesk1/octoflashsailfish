@@ -4,8 +4,7 @@ An OctoPrint plugin for updating the Sailfish firmware on your 3d printer.
 
 ## Setup
 
-Install via the bundled [Plugin Manager](https://github.com/foosel/OctoPrint/wiki/Plugin:-Plugin-Manager)
-or manually using this URL:
+Install manually using this URL:
 
     https://github.com/wesk1/octoflashsailfish/archive/master.zip
 
