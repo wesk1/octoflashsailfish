@@ -11,7 +11,7 @@ plugin_description = """This plugin checks for updates of the Sailfish firmware 
 plugin_author = "Mark Walker"
 plugin_author_email = "markwal@hotmail.com"
 plugin_url = "https://github.com/wesk1/octoflashsailfish"
-plugin_license = "GPLv3"
+plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
 plugin_requires = []
