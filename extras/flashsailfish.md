@@ -1,7 +1,7 @@
 ---
 layout: plugin
 
-id: flashsailfish
+id: flash-sailfish
 title: OctoPrint-FlashSailfish
 description: This plugin checks for updates of the Sailfish firmware and will offer to flash the new firmware onto your printer when a new version is available.
 author: Mark Walker
@@ -42,7 +42,7 @@ featuredimage: url of a featured image for your plugin
 compatibility:
   # list of compatible versions, for example 1.2.0. If left empty no specific version requirement will be assumed
   octoprint:
-  - 1.2.9
+  - 1.2.0
 
   # list of compatible operating systems, valid values are linux, windows, macos, leaving empty defaults to all
   os:

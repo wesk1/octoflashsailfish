@@ -1,5 +1,5 @@
 # coding=utf-8
-from __future__ import absolute_import
+
 
 import octoprint.plugin
 from octoprint.server.util.flask import restricted_access
@@ -12,24 +12,22 @@ from flask import request, make_response
 import requests
 import xmltodict
 
-
 class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
                           octoprint.plugin.AssetPlugin,
                           octoprint.plugin.TemplatePlugin,
-                          octoprint.plugin.BlueprintPlugin):
+						  octoprint.plugin.BlueprintPlugin):
 
 	def __init__(self, *args, **kwargs):
 		self.xml = None
 		self.firmware_info = None
 
-	# ~~ SettingsPlugin mixin
-	@staticmethod
-	def get_settings_defaults(*args, **kwargs):
+	##~~ SettingsPlugin mixin
+	def get_settings_defaults(self, *args, **kwargs):
 		return dict(
 			url="http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml"
 		)
 
-	# ~~ AssetPlugin mixin
+	##~~ AssetPlugin mixin
 	def get_assets(self, *args, **kwargs):
 		return dict(
 			js=["js/flashsailfish.js"],
@@ -37,14 +35,14 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 			less=["less/flashsailfish.less"]
 		)
 
-	# ~~ Softwareupdate hook
+	##~~ Softwareupdate hook
 	def get_update_information(self, *args, **kwargs):
 		return dict(
 			flashsailfish=dict(
-				displayName="Flash Sailfish",
+				displayName="Flash-Sailfish",
 				displayVersion=self._plugin_version,
 
-				# version check: gitHub repository
+				# version check: github repository
 				type="github_release",
 				user="markwal",
 				repo="octoflashsailfish",
@@ -55,7 +53,7 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 			)
 		)
 
-	# ~~ Blueprint mixin
+	##~~ Blueprint mixin
 	@BlueprintPlugin.route("/firmware_file", methods=["POST"])
 	@restricted_access
 	@admin_permission.require(403)
@@ -68,13 +66,13 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 	def get_firmware_info(self, *args, **kwargs):
 		return self._firmware_info()
 
+
 	@BlueprintPlugin.route("/refresh_firmware_info", methods=["POST"])
 	@restricted_access
 	@admin_permission.require(403)
 	def refresh_firmware_info(self, *args, **kwargs):
-		url = request.json.get("url")
-		if url:
-			self._settings.set(["url"], url)
+		if not request.json is None and "url" in request.json:
+			self._settings.set(["url"], request.json["url"])
 		self.xml = None
 		return self._firmware_info()
 
@@ -83,17 +81,14 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 			url = self._settings.get(["url"])
 			try:
 				self.xml = requests.get(url)
-			except requests.exceptions.RequestException as _:
+			except:
 				self._logger.exception("Unable to retrieve firmware information from {0}".format(url))
 				return make_response("Unable to retrieve firmware information from {0}".format(url), 400)
 			try:
 				self.firmware_info = xmltodict.parse(self.xml.text)
-			except requests.exceptions.RequestException as _:
-				self._logger.exception(
-					"Retrieved firmware information from {0}, but was unable to understand the response.".format(url))
-				return make_response(
-					"Retrieved firmware information from {0}, but was unable to understand the response.".format(url),
-					400)
+			except:
+				self._logger.exception("Retrieved firmware information from {0}, but was unable to understand the response.".format(url))
+				return make_response("Retrieved firmware information from {0}, but was unable to understand the response.".format(url), 400)
 		boards = dict()
 		for idx, board_xml in enumerate(self.firmware_info["boards"]["board"]):
 			if "@name" in board_xml and "firmware" in board_xml:
@@ -116,11 +111,7 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 				self._logger.info("Skipping board %s", repr(board_xml))
 		return flask.jsonify(boards)
 
-
 __plugin_name__ = "Flash-Sailfish"
-
-__plugin_pythoncom__ = ">=2.7,<4"  # Updated to support Python 3.9
-
 
 def __plugin_load__():
 	global __plugin_implementation__
