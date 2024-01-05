@@ -5,7 +5,7 @@ id: flashsailfish
 title: OctoPrint-FlashSailfish
 description: This plugin checks for updates of the Sailfish firmware and will offer to flash the new firmware onto your printer when a new version is available.
 author: Mark Walker
-license: AGPLv3
+license: GPLv3
 
 # TODO
 date: today's date in format YYYY-MM-DD, e.g. 2015-04-21
