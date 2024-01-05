@@ -117,7 +117,7 @@ class FlashSailfishPlugin(octoprint.plugin.SettingsPlugin,
 		return flask.jsonify(boards)
 
 
-__plugin_name__ = "Flash Sailfish"
+__plugin_name__ = "Flash-Sailfish"
 
 __plugin_pythoncom__ = ">=2.7,<4"  # Updated to support Python 3.9
 

@@ -2,7 +2,7 @@
 
 ########################################################################################################################
 
-plugin_identifier = "flashsailfish"
+plugin_identifier = "flash-sailfish"
 plugin_package = "octoprint_flashsailfish"
 plugin_name = "OctoPrint-FlashSailfish"
 plugin_version = "0.1.1"
