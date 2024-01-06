@@ -166,7 +166,7 @@ class FlashException(Exception):
         self.reason = reason
 
 
-__plugin_name__ = "Flash-Sailfish"
+__plugin_name__ = "Flash Sailfish"
 __plugin_pythoncompat__ = ">=2.7,<4"
 
 
