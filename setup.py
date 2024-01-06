@@ -1,16 +1,35 @@
 # coding=utf-8
 
 ########################################################################################################################
+### Do not forget to adjust the following variables to your own plugin.
 
+# The plugin's identifier, has to be unique
 plugin_identifier = "flash-sailfish"
+
+# The plugin's python package, should be "octoprint_<plugin identifier>", has to be unique
 plugin_package = "octoprint_flashsailfish"
+
+# The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
+# plugin module
+
 plugin_name = "OctoPrint-FlashSailfish"
-plugin_version = "0.1.0"
+
+# The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
+plugin_version = "0.1.1"
+
+# The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
+# module
 plugin_description = """This plugin checks for updates of the Sailfish firmware and will offer to flash the new firmware onto your printer when a new version is available."""
+
+# The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
 plugin_author = "Mark Walker"
+# The plugin's author's mail address.
 plugin_author_email = "markwal@hotmail.com"
+# The plugin's homepage URL. Can be overwritten within OctoPrint's internal data via __plugin_url__ in the plugin module
 plugin_url = "https://github.com/wesk1/octoflashsailfish"
-plugin_license = "GPLv3"
+
+# The plugin's license. Can be overwritten within OctoPrint's internal data via __plugin_license__ in the plugin module
+plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
 plugin_requires = []
@@ -23,7 +42,7 @@ plugin_requires = []
 # already be installed automatically if they exist.
 plugin_additional_data = []
 
-# Any additional python packages you need to install with your plugin that are not contained in <plugin_package>.*
+# Any additional python packages you need to install with your plugin that are not contains in <plugin_package>.*
 plugin_additional_packages = []
 
 # Any python packages within <plugin_package>.* you do NOT want to install with your plugin
@@ -62,7 +81,7 @@ setup_parameters = octoprint_setuptools.create_plugin_setup_parameters(
 	url=plugin_url,
 	license=plugin_license,
 	requires=plugin_requires,
-	additional_packages=plugin_additional_packages,
+	additional_packages=plugin_addtional_packages,
 	ignored_packages=plugin_ignored_packages,
 	additional_data=plugin_additional_data
 )
