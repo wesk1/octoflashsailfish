@@ -1,9 +1,3 @@
-/*
- * View model for OctoPrint-FlashSailfish
- *
- * Author: Mark Walker
- * License: GPLv3
- */
 $(function() {
     function FlashsailfishViewModel(parameters) {
         var self = this;
@@ -49,8 +43,8 @@ $(function() {
 
     // view model class, parameters for constructor, container to bind to
     OCTOPRINT_VIEWMODELS.push([
-        FlashsailfishViewModel,
-        [ "settingsViewModel" ],
-        [ "#settings_plugin_flashsailfish" ]
+        FirmwareUpdaterViewModel,
+        ["settingsViewModel", "loginStateViewModel", "connectionViewModel", "printerStateViewModel", "accessViewModel"],
+        ["#settings_plugin_flashsailfish", "#navbar_plugin_flashsailfish"]
     ]);
 });
