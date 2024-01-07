@@ -75,6 +75,9 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         filename = secure_filename(file.filename)
         file.save(os.path.join(target_folder, filename))
 
+        # Log the successful file upload
+        self._logger.info(f"File '{filename}' successfully uploaded to {target_folder}")
+
         return flask.jsonify({"message": "File successfully uploaded"})
 
     @octoprint.plugin.BlueprintPlugin.route("/refresh_firmware_info", methods=["POST"])
