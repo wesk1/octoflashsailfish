@@ -12,6 +12,18 @@ import octoprint.plugin
 from octoprint.server import admin_permission
 
 
+# FirmwareRetriever class definition
+class FirmwareRetriever:
+    def __init__(self, firmwarexml, firmwaresourceurl):
+        self.firmwareXml = firmwarexml
+        self.firmwareSourceURL = firmwaresourceurl
+
+    def check_for_updates(self):
+        # Implement your logic to check for firmware updates here
+        # You can use self.firmwareXml and self.firmwareSourceURL as needed
+        pass
+
+
 class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                           octoprint.plugin.TemplatePlugin,
                           octoprint.plugin.AssetPlugin,
@@ -118,8 +130,8 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     def get_firmware_updater(self):
         """Get the firmware updater instance."""
         return FirmwareRetriever(
-            firmwareXml=os.path.join(self.get_plugin_data_folder(), "firmware.xml"),
-            firmwareSourceURL=self._settings.get(["url"])
+            firmwarexml=os.path.join(self.get_plugin_data_folder(), "firmware.xml"),
+            firmwaresourceurl=self._settings.get(["url"])
         )
 
     # ~~ SettingsPlugin API

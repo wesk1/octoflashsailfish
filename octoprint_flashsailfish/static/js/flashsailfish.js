@@ -67,7 +67,7 @@ $(function() {
 };
 
         self.fetch_firmware_info = function() {
-            $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
+            $.getJSON("/firmware/", function(data) {
                 self.firmware_info = data;
                 self.refresh_observables();
             });
