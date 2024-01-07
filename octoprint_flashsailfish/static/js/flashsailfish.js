@@ -26,7 +26,11 @@ $(function() {
         };
 
         self.refresh_firmware_xml = function() {
-        };
+    $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
+        self.firmware_info = data;
+        self.refresh_observables();
+    });
+};
 
         self.refresh_observables = function() {
     self.boards.removeAll();  // Clear the array first
