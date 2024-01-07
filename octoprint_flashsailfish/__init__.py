@@ -157,30 +157,9 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
 
                 # version check: gitHub repository
                 type="github_release",
-                user="markwal",
+                user="wesk1",
                 repo="octoflashsailfish",
                 current=self._plugin_version,
-
-                # stable releases
-                stable_branch=dict(
-                    name="Stable",
-                    branch="master",
-                    comittish=["master"]
-                ),
-
-                # release candidates
-                prerelease_branches=[
-                    dict(
-                        name="Release Candidate",
-                        branch="rc",
-                        comittish=["rc", "master"],
-                    ),
-                    dict(
-                        name="Development",
-                        branch="devel",
-                        comittish=["devel", "rc", "master"],
-                    )
-                ],
 
                 # update method: pip
                 pip="https://github.com/wesk1/octoflashsailfish/archive/{target_version}.zip"
@@ -200,14 +179,6 @@ class FlashException(Exception):
 __plugin_name__ = "Flash Sailfish"
 
 __plugin_pythoncompat__ = ">=3.7,<4"
-
-# Set the global __plugin_implementation__ variable
-__plugin_implementation__ = FlashSailfishPlugin()
-
-# Set the global __plugin_hooks__ variable
-__plugin_hooks__ = {
-    "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
-}
 
 
 # Entry point for OctoPrint to load the plugin
