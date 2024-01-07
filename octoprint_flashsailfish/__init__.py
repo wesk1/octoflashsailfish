@@ -68,6 +68,15 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self.xml = None
         return self._firmware_info()
 
+    @octoprint.plugin.BlueprintPlugin.route("/update_firmware", methods=["POST"])
+    @octoprint.server.util.flask.restricted_access
+    @admin_permission.require(403)
+    def update_firmware(self):
+        """Trigger firmware update."""
+        firmware_updater = self.get_firmware_updater()
+        update_status = firmware_updater.check_for_updates()
+        return flask.jsonify({"status": update_status.name})
+
     def _firmware_info(self):
         """Retrieve and parse firmware information."""
         if self.xml is None:
@@ -105,6 +114,13 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
             else:
                 self._logger.info(f"Skipping board {repr(board_xml)}")
         return flask.jsonify(boards)
+
+    def get_firmware_updater(self):
+        """Get the firmware updater instance."""
+        return FirmwareRetriever(
+            firmwareXml=os.path.join(self.get_plugin_data_folder(), "firmware.xml"),
+            firmwareSourceURL=self._settings.get(["url"])
+        )
 
     # ~~ SettingsPlugin API
     def get_settings_defaults(self):

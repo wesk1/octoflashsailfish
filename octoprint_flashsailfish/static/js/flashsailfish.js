@@ -27,6 +27,21 @@ $(function() {
 
         self.refresh_firmware_xml = function() {
         };
+        self.update_firmware = function() {
+            $.ajax({
+                url: API_BASEURL + "plugin/flashsailfish/update_firmware",
+                type: "POST",
+                success: function(data) {
+                    // Handle success
+                    console.log("Firmware update status: " + data.status);
+                    // You can update the UI based on the firmware update status if needed
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error("Firmware update failed: " + error);
+                }
+            });
+        };
 
         self.refresh_observables = function() {
     self.boards.removeAll();  // Clear the array first

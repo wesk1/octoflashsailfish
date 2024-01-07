@@ -8,6 +8,11 @@
                 <input type="text" id="firmwareUrl" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
                 <button class="btn btn-primary" type="button" data-bind="click: refresh_firmware_xml"><i class="icon-refresh"></i></button>
             </div>
+                <!-- Check for Firmware Updates button -->
+    <div class="control-group">
+        <button class="btn btn-primary" data-bind="click: update_firmware">{{ _('Check for Firmware Updates') }}</button>
+    </div>
+
         </div>
     </div>
     <!-- Machine picker -->
