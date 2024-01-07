@@ -2,7 +2,7 @@ Your plugin's translations will reside here. The provided setup.py supports a
 couple of additional commands to make managing your translations easier:
 
 babel_extract
-    Extracts any translateable messages (marked with Jinja's `_("...")` or
+    Extracts any translatable messages (marked with Jinja's `_("...")` or
     JavaScript's `gettext("...")`) and creates the initial `messages.pot` file.
 babel_refresh
     Reruns extraction and updates the `messages.pot` file.

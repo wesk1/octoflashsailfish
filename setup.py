@@ -1,4 +1,5 @@
 # coding=utf-8
+from setuptools import setup
 
 ########################################################################################################################
 # Do not forget to adjust the following variables to your plugin.
@@ -35,9 +36,9 @@ plugin_license = "AGPLv3"
 # Any additional requirements besides OctoPrint should be listed here
 plugin_requires = []
 
-### --------------------------------------------------------------------------------------------------------------------
-### More advanced options that you usually shouldn't have to touch follow after this point
-### --------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
+# More advanced options that you usually shouldn't have to touch follow after this point
+# --------------------------------------------------------------------------------------------------------------------
 
 # Additional package data to install for this plugin. The subfolders "templates", "static" and "translations" will
 # already be installed automatically if they exist.
@@ -54,16 +55,14 @@ plugin_ignored_packages = []
 # default setup parameters as provided by octoprint_setuptools.create_plugin_setup_parameters using
 # octoprint.util.dict_merge.
 #
-# Example:
-#     plugin_requires = ["someDependency==dev"]
-#     additional_setup_parameters = {"dependency_links": ["https://github.com/someUser/someRepo/archive/master.zip#egg=someDependency-dev"]}
+# Example: plugin_requires = ["someDependency==dev"] additional_setup_parameters = {"dependency_links": [
+# "https://github.com/someUser/someRepo/archive/master.zip#egg=someDependency-dev"]}
 additional_setup_parameters = {
     "python_requires": ">=3.7,<3.10",  # Specify the supported Python versions
 }
 
 ########################################################################################################################
 
-from setuptools import setup
 
 try:
     import octoprint_setuptools

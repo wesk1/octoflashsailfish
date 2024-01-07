@@ -10,9 +10,6 @@ import tempfile
 import octoprint.plugin
 
 from octoprint.server import admin_permission
-from octoprint.server.util.flask import restricted_access
-from octoprint.events import Events
-from octoprint.util import dict_merge
 
 
 class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
@@ -22,7 +19,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                           octoprint.plugin.EventHandlerPlugin):
     """OctoPrint plugin for flashing Sailfish firmware."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self,):
         """Initialize the FlashSailfishPlugin."""
         self.xml = None
         self.firmware_info = None
@@ -39,7 +36,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         file_handler.setFormatter(formatter)
         self._logger.addHandler(file_handler)
 
-        super().__init__(*args, **kwargs)
+        super().__init__()
 
     @octoprint.plugin.BlueprintPlugin.errorhandler(Exception)
     def errorhandler(self, error):
@@ -50,7 +47,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     @octoprint.plugin.BlueprintPlugin.route("/firmware_info", methods=["GET"])
     @octoprint.server.util.flask.restricted_access
     @admin_permission.require(403)
-    def get_firmware_info(self, *args, **kwargs):
+    def get_firmware_info(self,):
         """Get firmware information."""
         return self._firmware_info()
 
@@ -64,9 +61,9 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     @octoprint.plugin.BlueprintPlugin.route("/refresh_firmware_info", methods=["POST"])
     @octoprint.server.util.flask.restricted_access
     @admin_permission.require(403)
-    def refresh_firmware_info(self, *args, **kwargs):
+    def refresh_firmware_info(self, ):
         """Refresh firmware information."""
-        if not flask.request.json is None and "url" in flask.request.json:
+        if flask.request.json is not None and "url" in flask.request.json:
             self._settings.set(["url"], flask.request.json["url"])
         self.xml = None
         return self._firmware_info()
@@ -125,13 +122,13 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         )
 
     # ~~ Update hook
-    def get_update_information(self, *args, **kwargs):
+    def get_update_information(self,):
         return dict(
             flashsailfish=dict(
                 displayName="Flash Sailfish",
                 displayVersion=self._plugin_version,
 
-                # version check: github repository
+                # version check: gitHub repository
                 type="github_release",
                 user="markwal",
                 repo="octoflashsailfish",
@@ -168,14 +165,23 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
 
 
 class FlashException(Exception):
-    def __init__(self, reason, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, reason, *args,):
+        super().__init__(*args,)
         self.reason = reason
 
 
 __plugin_name__ = "Flash Sailfish"
 
+# Set the global __plugin_implementation__ variable
+__plugin_implementation__ = FlashSailfishPlugin()
 
+# Set the global __plugin_hooks__ variable
+__plugin_hooks__ = {
+    "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
+}
+
+
+# Entry point for OctoPrint to load the plugin
 def __plugin_load__():
     global __plugin_implementation__
     global __plugin_hooks__
