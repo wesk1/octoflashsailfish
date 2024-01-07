@@ -23,7 +23,37 @@ $(function() {
         });
 
         self.flash_firmware = function() {
-        };
+    const fileInput = document.getElementById("fileInput");  // Update this with the actual ID of your file input element
+
+    // Check if a file is selected
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // Make a POST request to the server to handle the file upload
+        $.ajax({
+            type: "POST",
+            url: "/plugin/flashsailfish/firmware_file",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log("File upload successful:", response);
+                // Add any further actions after a successful upload
+            },
+            error: function(error) {
+                console.error("File upload failed:", error);
+                // Handle the error, if necessary
+            }
+        });
+    } else {
+        console.warn("No file selected for upload");
+    }
+};
+
 
         self.refresh_firmware_xml = function() {
     $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {

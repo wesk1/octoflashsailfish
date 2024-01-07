@@ -58,6 +58,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     @octoprint.server.util.flask.restricted_access
     @admin_permission.require(403)
     def firmware_file(self, *args, **kwargs):
+        print("File upload initiated")
         """Handle firmware file upload."""
         target_folder = "/tmp/"  # Update this to the desired target folder
 
