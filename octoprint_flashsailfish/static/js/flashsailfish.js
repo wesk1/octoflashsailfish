@@ -6,7 +6,7 @@
  */
 $(function() {
     function FlashsailfishViewModel(parameters) {
-        var self = this;
+        const self = this;
 
         self.settings = parameters[0];
 
@@ -18,24 +18,39 @@ $(function() {
 
         self.firmware_info = undefined;
 
-        self.custom_selected = ko.computed(function() {
-            return self.version() == "custom";
-        }, self);
+        self.custom_selected = ko.computed(() => {
+            return self.version() === "custom";
+        });
 
         self.flash_firmware = function() {
         };
 
         self.refresh_firmware_xml = function() {
-        };
+    $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
+        self.firmware_info = data;
+        self.refresh_observables();
+    });
+};
+        
+self.refresh_observables = function() {
+    self.boards.removeAll();  // Clear the array first
 
-        self.refresh_observables = function() {
-            if (self.firmware_info != undefined) {
-                for (board in self.firmware_info) {
-                    self.boards.push(board);
-                }
-                self.boards.sort();
+    if (self.firmware_info !== undefined) {
+        console.log("Firmware Info:", self.firmware_info);  // Add this line for debugging
+
+        for (const board in self.firmware_info) {
+            if (self.firmware_info.hasOwnProperty(board)) {
+                console.log("Adding board:", board);  // Add this line for debugging
+                self.boards.push(board);
             }
-        };
+        }
+
+        console.log("Firmware Info:", self.firmware_info);
+        console.log("Sorted Boards:", self.boards());
+
+        self.boards.sort();
+    }
+};
 
         self.fetch_firmware_info = function() {
             $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
