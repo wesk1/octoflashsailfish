@@ -51,11 +51,17 @@ $(function() {
     self.boards.removeAll();  // Clear the array first
 
     if (self.firmware_info !== undefined) {
+        console.log("Firmware Info:", self.firmware_info);  // Add this line for debugging
+
         for (const board in self.firmware_info) {
             if (self.firmware_info.hasOwnProperty(board)) {
+                console.log("Adding board:", board);  // Add this line for debugging
                 self.boards.push(board);
             }
         }
+
+        console.log("Sorted Boards:", self.boards());  // Add this line for debugging
+
         self.boards.sort();
     }
 };
