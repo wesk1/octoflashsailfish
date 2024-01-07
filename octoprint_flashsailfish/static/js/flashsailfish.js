@@ -31,7 +31,7 @@ $(function() {
         self.refresh_observables();
     });
 };
-        
+
 self.refresh_observables = function() {
     self.boards.removeAll();  // Clear the array first
 
