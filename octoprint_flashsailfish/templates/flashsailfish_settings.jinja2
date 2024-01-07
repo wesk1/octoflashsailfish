@@ -45,7 +45,10 @@
         <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
     </div>
     <!-- Progress panel -->
-
+    <div id="progressPanel" style="display: none;">
+    <p>Progress: <span id="progressValue">0%</span></p>
+    <div id="progressBar"></div>
+    </div>
     <!-- automatically check for updates and notify -->
 
 </div>
