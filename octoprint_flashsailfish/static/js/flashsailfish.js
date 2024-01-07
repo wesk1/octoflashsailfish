@@ -9,7 +9,6 @@ $(function() {
         const self = this;
 
         self.settings = parameters[0];
-        self.configShowNavbarIcon = ko.observable();                    // enable_navbar
         self.boards = ko.observableArray([]);
         self.board = ko.observable(undefined);
         self.versions = ko.observableArray([]);
@@ -50,14 +49,11 @@ $(function() {
 
         self.onSettingsShown = self.fetch_firmware_info;
     }
-        self.showFirmwareUpdater = function(){
-            self.settingsViewModel.show("#settings_plugin_flashsailfish");
-        }
 
     // View model class, parameters for constructor, container to bind to
     OCTOPRINT_VIEWMODELS.push([
         FlashsailfishViewModel,
         ["settingsViewModel"],
-        ["#settings_plugin_flashsailfish", "#navbar_plugin_firmwareupdater"]
+        ["#settings_plugin_flashsailfish"]
     ]);
 });

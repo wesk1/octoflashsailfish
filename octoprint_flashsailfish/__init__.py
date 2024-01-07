@@ -110,20 +110,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     def get_settings_defaults(self):
         return {
             "url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml",
-            "enable_navbar": False,
         }
-
-    def on_settings_save(self, data):
-        octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
-
-        if "enable_navbar" in data:
-            enable_navbar = data["enable_navbar"]
-            if enable_navbar:
-                self._logger.info("Enabling display in navbar")
-                # Logic to add to navbar
-            else:
-                self._logger.info("Disabling display in navbar")
-                # Logic to remove from navbar
 
     # ~~ AssetPlugin API
     def get_assets(self):
