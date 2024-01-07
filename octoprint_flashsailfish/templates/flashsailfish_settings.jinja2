@@ -38,17 +38,18 @@
     <div class="input-prepend">
         <span class="btn fileinput-button">
             <span>{{ _('Browse...') }}</span>
-            <input type="file" id="fileInput" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}">
+            <input type="file" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}" id="fileInput">
         </span>
         <span class="add-on" data-bind="text: firmware_path"></span>
-
-        <!-- Display selected file name -->
-        <span data-bind="text: uploadedFilename"></span>
-
-        <!-- New button for manual upload to /tmp -->
-        <button class="btn btn-primary" data-bind="click: uploadToTmp">{{ _('Upload to /tmp') }}</button>
     </div>
+    <!-- Label to display selected filename -->
+    <label id="selectedFileNameLabel" class="control-label" style="margin-top: 5px;"></label>
 </div>
+<!-- Update button -->
+<div class="control-group">
+    <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
+</div>
+
     <!-- Update button -->
     <div class="control-group">
         <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
