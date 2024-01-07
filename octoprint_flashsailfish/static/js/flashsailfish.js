@@ -80,24 +80,35 @@ $(function() {
             }
         };
 
-        self.board.subscribe(function(newBoard) {
-            self.versions.removeAll();  // Clear the versions array first
-            if (newBoard !== undefined && self.firmware_info !== undefined) {
-                const firmwareVersions = self.firmware_info[newBoard].firmwares;  // Fix: Access the 'firmwares' property
+self.board.subscribe(function (newBoard) {
+    self.versions.removeAll();  // Clear the versions array first
+    if (newBoard !== undefined && self.firmware_info !== undefined) {
+        const firmwareVersions = self.firmware_info[newBoard];
 
-                if (firmwareVersions !== undefined) {
-                    for (const version in firmwareVersions) {
-                        if (firmwareVersions.hasOwnProperty(version)) {
-                            self.versions.push(version);
+        if (firmwareVersions !== undefined) {
+            const firmwares = firmwareVersions.firmwares;
+
+            if (firmwares !== undefined) {
+                if (Array.isArray(firmwares)) {
+                    for (const firmware of firmwares) {
+                        if (firmware["@name"] !== undefined) {
+                            self.versions.push(firmware["@name"]);
                         }
                     }
-
-                    console.log("Sorted Versions:", self.versions());  // Add this line for debugging
-
-                    self.versions.sort();
+                } else {
+                    if (firmwares["@name"] !== undefined) {
+                        self.versions.push(firmwares["@name"]);
+                    }
                 }
+
+                console.log("Sorted Versions:", self.versions());  // Add this line for debugging
+
+                self.versions.sort();
             }
-        });
+        }
+    }
+});
+
 
         self.fetch_firmware_info = function(){
             $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
