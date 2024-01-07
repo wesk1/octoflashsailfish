@@ -47,7 +47,7 @@ $(function() {
             });
         };
 
-        self.refresh_observables = function() {
+self.refresh_observables = function() {
     self.boards.removeAll();  // Clear the array first
 
     if (self.firmware_info !== undefined) {
@@ -60,7 +60,9 @@ $(function() {
             }
         }
 
-        console.log("Sorted Boards:", self.boards());  // Add this line for debugging
+        console.log("Firmware Info:", self.firmware_info);
+        console.log("Adding board:", board);
+        console.log("Sorted Boards:", self.boards());
 
         self.boards.sort();
     }
