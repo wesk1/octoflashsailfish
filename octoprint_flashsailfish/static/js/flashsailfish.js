@@ -21,6 +21,12 @@ $(function() {
 
         self.flash_firmware = function() {
             const fileInput = document.getElementById("fileInput");
+        const selectedFileNameLabel = document.getElementById("selectedFileNameLabel");
+
+        fileInput.addEventListener("change", function() {
+            // Update the label with the selected filename
+            selectedFileNameLabel.textContent = this.files.length > 0 ? this.files[0].name : "";
+        });
 
             // Check if a file is selected
             if (fileInput.files.length > 0) {
