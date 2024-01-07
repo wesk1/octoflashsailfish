@@ -53,16 +53,15 @@ self.refresh_observables = function() {
     if (self.firmware_info !== undefined) {
         console.log("Firmware Info:", self.firmware_info);  // Add this line for debugging
 
-        for (const board in self.firmware_info) {
-            if (self.firmware_info.hasOwnProperty(board)) {
-                console.log("Adding board:", board);  // Add this line for debugging
-                self.boards.push(board);
-            }
-        }
+        for (const boardKey in self.firmware_info) {
+    if (self.firmware_info.hasOwnProperty(boardKey)) {
+        const board = self.firmware_info[boardKey];
+        console.log("Adding board:", board);  // Add this line for debugging
+        self.boards.push(board);
+    }
+}
 
-        console.log("Firmware Info:", self.firmware_info);
-        console.log("Adding board:", board);
-        console.log("Sorted Boards:", self.boards());
+        console.log("Sorted Boards:", self.boards().slice());
 
         self.boards.sort();
     }
