@@ -15,7 +15,6 @@ $(function() {
         self.versions = ko.observableArray([]);
         self.version = ko.observable(undefined);
         self.firmware_path = ko.observable(undefined);
-        self.firmwareInfo = ko.observable({});
 
         self.firmware_info = undefined;
 
@@ -80,40 +79,28 @@ $(function() {
             }
         };
 
-self.board.subscribe(function (newBoard) {
-    self.versions.removeAll();  // Clear the versions array first
-    if (newBoard !== undefined && self.firmware_info !== undefined) {
-        const firmwareVersions = self.firmware_info[newBoard];
+        self.board.subscribe(function(newBoard) {
+            self.versions.removeAll();  // Clear the versions array first
+            if (newBoard !== undefined && self.firmware_info !== undefined) {
+                const firmwareVersions = self.firmware_info[newBoard].firmwares;  // Fix: Access the 'firmwares' property
 
-        if (firmwareVersions !== undefined) {
-            const firmwares = firmwareVersions.firmwares;
-
-            if (firmwares !== undefined) {
-                if (Array.isArray(firmwares)) {
-                    for (const firmware of firmwares) {
-                        if (firmware["@name"] !== undefined) {
-                            self.versions.push(firmware["@name"]);
+                if (firmwareVersions !== undefined) {
+                    for (const version in firmwareVersions) {
+                        if (firmwareVersions.hasOwnProperty(version)) {
+                            self.versions.push(version);
                         }
                     }
-                } else {
-                    if (firmwares["@name"] !== undefined) {
-                        self.versions.push(firmwares["@name"]);
-                    }
+
+                    console.log("Sorted Versions:", self.versions());  // Add this line for debugging
+
+                    self.versions.sort();
                 }
-
-                console.log("Sorted Versions:", self.versions());  // Add this line for debugging
-
-                self.versions.sort();
             }
-        }
-    }
-});
+        });
 
-
-        self.fetch_firmware_info = function(){
+        self.fetch_firmware_info = function() {
             $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
                 self.firmware_info = data;
-                self.firmwareInfo(data); // Populate firmwareInfo with the fetched data
                 self.refresh_observables();
             });
         };
