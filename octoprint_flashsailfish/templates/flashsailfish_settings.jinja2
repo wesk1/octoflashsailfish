@@ -5,7 +5,8 @@
         <label class="control-label">{{ _('Firmware update URL:') }}</label>
         <div class="controls">
             <div class="input-append">
-                <input type="text" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
+                <label for="firmwareUrl">{{ _('Firmware update URL:') }}</label>
+                <input type="text" id="firmwareUrl" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
                 <button class="btn btn-primary" type="button" data-bind="click: refresh_firmware_xml"><i class="icon-refresh"></i></button>
             </div>
         </div>
@@ -14,24 +15,26 @@
     <div class="control-group">
         <label class="control-label">{{ _('Select the board to upgrade:') }}</label>
         <div class="controls">
-            <select data-bind="options: boards, value: board"></select>
+            <label for="boardSelect">{{ _('Select the board to upgrade:') }}</label>
+            <select id="boardSelect" data-bind="options: boards, value: board"></select>
         </div>
     </div>
     <!-- Version picker -->
     <div class="control-group">
         <label class="control-label">{{ _('Select the firmware version:') }}</label>
         <div class="controls">
-            <select data-bind="options: versions, value: version"></select>
+            <label for="versionSelect">{{ _('Select the firmware version:') }}</label>
+            <select id="versionSelect" data-bind="options: versions, value: version"></select>
         </div>
     </div>
     <!-- Hex file upload -->
     <div class="control-group" data-bind="visible: custom_selected">
         <label class="control-label">{{ _('Custom firmware upload:') }}</label>
         <div class="input-prepend">
-                <span class="btn fileinput-button">
-                    <span>{{ _('Browse...') }}</span>
-                    <input type="file" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}">
-                </span>
+            <span class="btn fileinput-button">
+                <span>{{ _('Browse...') }}</span>
+                <input type="file" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}">
+            </span>
             <span class="add-on" data-bind="text: firmware_path"></span>
         </div>
     </div>

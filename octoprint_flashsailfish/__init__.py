@@ -7,9 +7,6 @@ import os
 import requests
 import xmltodict
 import tempfile
-import threading
-import shutil
-import time
 import octoprint.plugin
 
 from octoprint.server import admin_permission
@@ -38,7 +35,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         # You can customize the log file location here
         log_file_path = os.path.join(tempfile.gettempdir(), 'flash_sailfish.log')
 
-        file_handler = logging.handlers.RotatingFileHandler(log_file_path, maxBytes=1e6, backupCount=3)
+        file_handler = logging.handlers.RotatingFileHandler(log_file_path, maxBytes=int(1e6), backupCount=3)
         file_handler.setFormatter(formatter)
         self._logger.addHandler(file_handler)
 
@@ -115,7 +112,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     # ~~ SettingsPlugin API
     def get_settings_defaults(self, *args, **kwargs):
         return {
-            "url": "http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml",
+            "url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml",
             "enable_navbar": False,
         }
 
