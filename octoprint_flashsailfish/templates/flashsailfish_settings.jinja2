@@ -18,13 +18,20 @@
             <select id="boardSelect" data-bind="options: boards, value: board"></select>
         </div>
     </div>
-    <!-- Version picker -->
-    <div class="control-group">
-        <div class="controls">
-            <label for="versionSelect">{{ _('Select the firmware version:') }}</label>
-            <select id="versionSelect" data-bind="options: versions, value: version"></select>
-        </div>
+<!-- Version picker -->
+<div class="control-group">
+    <div class="controls">
+        <label for="versionSelect">{{ _('Select the firmware version:') }}</label>
+        <select id="versionSelect" data-bind="options: versions, value: version"></select>
     </div>
+</div>
+
+<!-- Display Firmware Description -->
+<div class="control-group">
+    <label for="firmwareDescription">{{ _('Firmware Description:') }}</label>
+    <div id="firmwareDescription" data-bind="text: selectedFirmwareDescription"></div>
+</div>
+
     <!-- Hex file upload -->
     <div class="control-group">
     <label class="control-label">{{ _('Custom firmware upload:') }}</label>
