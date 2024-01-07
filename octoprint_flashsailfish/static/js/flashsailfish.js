@@ -15,7 +15,7 @@ $(function() {
         self.versions = ko.observableArray([]);
         self.version = ko.observable(undefined);
         self.firmware_path = ko.observable(undefined);
-
+        self.selectedFirmwareDescription = ko.observable("");
         self.firmware_info = undefined;
 
         self.custom_selected = ko.computed(() => {
@@ -97,6 +97,26 @@ $(function() {
                 }
             }
         });
+        self.version.subscribe(function(newVersion) {
+    if (newVersion !== undefined && self.firmware_info !== undefined) {
+        const selectedBoard = self.board();
+        const firmwareInfo = self.firmware_info[selectedBoard];
+
+        if (firmwareInfo !== undefined) {
+            const firmwareVersions = firmwareInfo.firmwares;
+
+            if (firmwareVersions !== undefined) {
+                const selectedFirmware = firmwareVersions[newVersion];
+
+                if (selectedFirmware !== undefined && selectedFirmware.description !== undefined) {
+                    self.selectedFirmwareDescription(selectedFirmware.description);
+                } else {
+                    self.selectedFirmwareDescription("");
+                }
+            }
+        }
+    }
+});
 
         self.fetch_firmware_info = function() {
             $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
