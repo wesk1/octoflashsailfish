@@ -18,16 +18,12 @@
             <select id="boardSelect" data-bind="options: boards, value: board"></select>
         </div>
     </div>
-    <!-- Firmware version picker -->
+    <!-- Version picker -->
     <div class="control-group">
         <div class="controls">
             <label for="versionSelect">{{ _('Select the firmware version:') }}</label>
             <select id="versionSelect" data-bind="options: versions, value: version"></select>
         </div>
-    </div>
-    <!-- Firmware description -->
-    <div data-bind="if: version() !== undefined">
-        <p data-bind="text: firmwareInfo[board()][version()].description"></p>
     </div>
     <!-- Hex file upload -->
     <div class="control-group">
