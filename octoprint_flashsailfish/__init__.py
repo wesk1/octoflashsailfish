@@ -172,7 +172,7 @@ class FlashException(Exception):
 
 __plugin_name__ = "Flash Sailfish"
 
-__plugin_pythoncompat__ = ">=3.7,<4"
+__plugin_pythoncompat__ = ">=2.7,<4"
 
 # Set the global __plugin_implementation__ variable
 __plugin_implementation__ = FlashSailfishPlugin()
