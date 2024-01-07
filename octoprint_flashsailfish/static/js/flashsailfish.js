@@ -6,7 +6,7 @@
  */
 $(function() {
     function FlashsailfishViewModel(parameters) {
-        var self = this;
+        const self = this;
 
         self.settings = parameters[0];
 
@@ -18,9 +18,9 @@ $(function() {
 
         self.firmware_info = undefined;
 
-        self.custom_selected = ko.computed(function() {
-            return self.version() == "custom";
-        }, self);
+        self.custom_selected = ko.computed(() => {
+            return self.version() === "custom";
+        });
 
         self.flash_firmware = function() {
         };
@@ -29,13 +29,17 @@ $(function() {
         };
 
         self.refresh_observables = function() {
-            if (self.firmware_info != undefined) {
-                for (board in self.firmware_info) {
-                    self.boards.push(board);
-                }
-                self.boards.sort();
+    self.boards.removeAll();  // Clear the array first
+
+    if (self.firmware_info !== undefined) {
+        for (const board in self.firmware_info) {
+            if (self.firmware_info.hasOwnProperty(board)) {
+                self.boards.push(board);
             }
-        };
+        }
+        self.boards.sort();
+    }
+};
 
         self.fetch_firmware_info = function() {
             $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
