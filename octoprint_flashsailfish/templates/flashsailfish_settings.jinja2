@@ -8,6 +8,7 @@
                 <input type="text" id="firmwareUrl" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
                 <button class="btn btn-primary" type="button" data-bind="click: refresh_firmware_xml"><i class="icon-refresh"></i></button>
             </div>
+
         </div>
     </div>
     <!-- Machine picker -->
@@ -24,30 +25,27 @@
             <select id="versionSelect" data-bind="options: versions, value: version"></select>
         </div>
     </div>
-    <!-- Firmware information -->
+    <!-- Firmware description -->
     <div data-bind="if: version() !== undefined">
-        <p><strong>Firmware Description:</strong> <span data-bind="text: firmwareInfo()[board()][version()].description"></span></p>
-        <!-- Add more fields as needed -->
+        <p data-bind="text: firmwareInfo[board()][version()].description"></p>
     </div>
     <!-- Hex file upload -->
     <div class="control-group">
-        <label class="control-label">{{ _('Custom firmware upload:') }}</label>
-        <div class="input-prepend">
-            <span class="btn fileinput-button">
-                <span>{{ _('Browse...') }}</span>
-                <input type="file" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}">
-            </span>
-            <span class="add-on" data-bind="text: firmware_path"></span>
-        </div>
+    <label class="control-label">{{ _('Custom firmware upload:') }}</label>
+    <div class="input-prepend">
+        <span class="btn fileinput-button">
+            <span>{{ _('Browse...') }}</span>
+            <input type="file" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}">
+        </span>
+        <span class="add-on" data-bind="text: firmware_path"></span>
+    </div>
     </div>
     <!-- Update button -->
     <div class="control-group">
         <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
     </div>
     <!-- Progress panel -->
-    <div id="progressPanel" style="display: none;">
-        <p>Flashing Progress: <span id="progressValue">0%</span></p>
-        <div id="progressBar"></div>
-    </div>
+
     <!-- automatically check for updates and notify -->
+
 </div>
