@@ -30,15 +30,18 @@ $(function() {
         };
 
         self.refresh_observables = function() {
-            if (self.firmware_info !== undefined) {
-                for (const board in self.firmware_info) {
-                    if (self.firmware_info.hasOwnProperty(board)) {
-                        self.boards.push(board);
-                    }
-                }
-                self.boards.sort();
+    self.boards.removeAll();  // Clear the array first
+
+    if (self.firmware_info !== undefined) {
+        for (const board in self.firmware_info) {
+            if (self.firmware_info.hasOwnProperty(board)) {
+                self.boards.push(board);
             }
-        };
+        }
+        self.boards.sort();
+    }
+};
+
 
         self.fetch_firmware_info = function() {
             $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
