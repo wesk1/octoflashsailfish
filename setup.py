@@ -9,7 +9,7 @@ plugin_identifier = "flashsailfish"
 # The plugin's python package, should be "octoprint_<plugin identifier>", has to be unique
 plugin_package = "octoprint_flashsailfish"
 
-# The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
+# The plugin's human-readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
 # plugin module
 
 plugin_name = "OctoPrint FlashSailfish"
@@ -19,7 +19,8 @@ plugin_version = "0.1.1"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
-plugin_description = """This plugin checks for updates of the Sailfish firmware and will offer to flash the new firmware onto your printer when a new version is available."""
+plugin_description = """This plugin checks for updates of the Sailfish firmware and will offer to flash the new
+firmware onto your printer when a new version is available."""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
 plugin_author = "Mark Walker"
@@ -42,21 +43,23 @@ plugin_requires = []
 # already be installed automatically if they exist.
 plugin_additional_data = []
 
-# Any additional python packages you need to install with your plugin that are not contains in <plugin_package>.*
+# Any additional python packages you need to install with your plugin that are not contained in <plugin_package>.*
 plugin_additional_packages = []
 
 # Any python packages within <plugin_package>.* you do NOT want to install with your plugin
 plugin_ignored_packages = []
 
 # Additional parameters for the call to setuptools.setup. If your plugin wants to register additional entry points,
-# define dependency links or other things like that, this is the place to go. Will be merged recursively with the
+# define dependency links, or other things like that, this is the place to go. Will be merged recursively with the
 # default setup parameters as provided by octoprint_setuptools.create_plugin_setup_parameters using
 # octoprint.util.dict_merge.
 #
 # Example:
 #     plugin_requires = ["someDependency==dev"]
 #     additional_setup_parameters = {"dependency_links": ["https://github.com/someUser/someRepo/archive/master.zip#egg=someDependency-dev"]}
-additional_setup_parameters = {}
+additional_setup_parameters = {
+    "python_requires": ">=3.7,<3.10",  # Specify the supported Python versions
+}
 
 ########################################################################################################################
 

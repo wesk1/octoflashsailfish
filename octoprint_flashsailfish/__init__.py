@@ -1,5 +1,4 @@
 # coding=utf-8
-from __future__ import absolute_import
 
 import flask
 import logging
@@ -13,12 +12,10 @@ import shutil
 import time
 import octoprint.plugin
 
-import octoprint.server.util.flask
-from octoprint.server import admin_permission, NO_CONTENT
+from octoprint.server import admin_permission
+from octoprint.server.util.flask import restricted_access
 from octoprint.events import Events
-from octoprint.util import CaseInsensitiveSet, dict_merge
-
-from past.builtins import basestring
+from octoprint.util import dict_merge
 
 
 class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
@@ -33,6 +30,20 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self.xml = None
         self.firmware_info = None
 
+        # Add logging setup here
+        self._logger = logging.getLogger(__name__)
+        self._logger.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        # You can customize the log file location here
+        log_file_path = os.path.join(tempfile.gettempdir(), 'flash_sailfish.log')
+
+        file_handler = logging.handlers.RotatingFileHandler(log_file_path, maxBytes=1e6, backupCount=3)
+        file_handler.setFormatter(formatter)
+        self._logger.addHandler(file_handler)
+
+        super().__init__(*args, **kwargs)
+
     @octoprint.plugin.BlueprintPlugin.errorhandler(Exception)
     def errorhandler(self, error):
         """Handle unhandled exceptions and log them."""
@@ -41,25 +52,25 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
 
     @octoprint.plugin.BlueprintPlugin.route("/firmware_info", methods=["GET"])
     @octoprint.server.util.flask.restricted_access
-    @octoprint.server.admin_permission.require(403)
+    @admin_permission.require(403)
     def get_firmware_info(self, *args, **kwargs):
         """Get firmware information."""
         return self._firmware_info()
 
     @octoprint.plugin.BlueprintPlugin.route("/firmware_file", methods=["POST"])
     @octoprint.server.util.flask.restricted_access
-    @octoprint.server.admin_permission.require(403)
+    @admin_permission.require(403)
     def firmware_file(self, *args, **kwargs):
         """Handle firmware file upload."""
         pass
 
     @octoprint.plugin.BlueprintPlugin.route("/refresh_firmware_info", methods=["POST"])
     @octoprint.server.util.flask.restricted_access
-    @octoprint.server.admin_permission.require(403)
+    @admin_permission.require(403)
     def refresh_firmware_info(self, *args, **kwargs):
         """Refresh firmware information."""
-        if not request.json is None and "url" in request.json:
-            self._settings.set(["url"], request.json["url"])
+        if not flask.request.json is None and "url" in flask.request.json:
+            self._settings.set(["url"], flask.request.json["url"])
         self.xml = None
         return self._firmware_info()
 
@@ -69,17 +80,16 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
             url = self._settings.get(["url"])
             try:
                 self.xml = requests.get(url)
-            except:
-                self._logger.exception("Unable to retrieve firmware information from {0}".format(url))
-                return flask.make_response("Unable to retrieve firmware information from {0}".format(url), 400)
+            except Exception as e:
+                self._logger.exception(f"Unable to retrieve firmware information from {url}: {e}")
+                return flask.make_response(f"Unable to retrieve firmware information from {url}", 400)
             try:
                 self.firmware_info = xmltodict.parse(self.xml.text)
-            except:
+            except Exception as e:
                 self._logger.exception(
-                    "Retrieved firmware information from {0}, but was unable to understand the response.".format(url))
+                    f"Retrieved firmware information from {url}, but was unable to understand the response: {e}")
                 return flask.make_response(
-                    "Retrieved firmware information from {0}, but was unable to understand the response.".format(url),
-                    400)
+                    f"Retrieved firmware information from {url}, but was unable to understand the response", 400)
         boards = dict()
         for idx, board_xml in enumerate(self.firmware_info["boards"]["board"]):
             if "@name" in board_xml and "firmware" in board_xml:
@@ -96,10 +106,10 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                         firmware["description"] = firmware_xml["@description"]
                         board["firmwares"][firmware_xml["@name"]] = firmware
                     else:
-                        self._logger.info("Skipping firmware %s", repr(firmware_xml))
+                        self._logger.info(f"Skipping firmware {repr(firmware_xml)}")
                 boards[board_xml["@name"]] = board
             else:
-                self._logger.info("Skipping board %s", repr(board_xml))
+                self._logger.info(f"Skipping board {repr(board_xml)}")
         return flask.jsonify(boards)
 
     # ~~ SettingsPlugin API
@@ -162,12 +172,11 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
 
 class FlashException(Exception):
     def __init__(self, reason, *args, **kwargs):
-        Exception.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.reason = reason
 
 
 __plugin_name__ = "Flash Sailfish"
-__plugin_pythoncompat__ = ">=2.7,<4"
 
 
 def __plugin_load__():
