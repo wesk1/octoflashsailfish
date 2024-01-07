@@ -54,18 +54,19 @@ self.refresh_observables = function() {
         console.log("Firmware Info:", self.firmware_info);  // Add this line for debugging
 
         for (const boardKey in self.firmware_info) {
-    if (self.firmware_info.hasOwnProperty(boardKey)) {
-        const board = self.firmware_info[boardKey];
-        console.log("Adding board:", board);  // Add this line for debugging
-        self.boards.push(board);
-    }
-}
+            if (self.firmware_info.hasOwnProperty(boardKey)) {
+                const board = self.firmware_info[boardKey];
+                console.log("Adding board:", board);  // Add this line for debugging
+                self.boards.push(board);
+            }
+        }
 
         console.log("Sorted Boards:", self.boards().slice());
 
         self.boards.sort();
     }
 };
+
 
         self.fetch_firmware_info = function() {
             $.getJSON("/firmware/", function(data) {
