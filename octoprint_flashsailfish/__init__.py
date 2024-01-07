@@ -10,9 +10,10 @@ import tempfile
 import octoprint.plugin
 
 from octoprint.server import admin_permission
-
+from werkzeug.utils import secure_filename
 
 # FirmwareRetriever class definition
+
 
 class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                           octoprint.plugin.TemplatePlugin,
@@ -58,7 +59,23 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     @admin_permission.require(403)
     def firmware_file(self, *args, **kwargs):
         """Handle firmware file upload."""
-        pass
+        target_folder = "/tmp/"  # Update this to the desired target folder
+
+        # Check if the 'file' key is in the request
+        if "file" not in flask.request.files:
+            return flask.make_response("No file part", 400)
+
+        file = flask.request.files["file"]
+
+        # Check if the file is empty
+        if file.filename == "":
+            return flask.make_response("No selected file", 400)
+
+        # Securely save the file to the target folder
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(target_folder, filename))
+
+        return flask.jsonify({"message": "File successfully uploaded"})
 
     @octoprint.plugin.BlueprintPlugin.route("/refresh_firmware_info", methods=["POST"])
     @octoprint.server.util.flask.restricted_access
