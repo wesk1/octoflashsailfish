@@ -6,7 +6,7 @@
  */
 $(function() {
     function FlashsailfishViewModel(parameters) {
-        const self = this;
+        var self = this;
 
         self.settings = parameters[0];
 
@@ -19,24 +19,19 @@ $(function() {
         self.firmware_info = undefined;
 
         self.custom_selected = ko.computed(function() {
-        return self.version() === "custom";
+            return self.version() == "custom";
         }, self);
 
-
         self.flash_firmware = function() {
-            // Add your implementation here
         };
 
         self.refresh_firmware_xml = function() {
-            // Add your implementation here
         };
 
         self.refresh_observables = function() {
-            if (self.firmware_info !== undefined) {
-                for (const board in self.firmware_info) {
-                    if (self.firmware_info.hasOwnProperty(board)) {
-                        self.boards.push(board);
-                    }
+            if (self.firmware_info != undefined) {
+                for (board in self.firmware_info) {
+                    self.boards.push(board);
                 }
                 self.boards.sort();
             }
@@ -52,10 +47,10 @@ $(function() {
         self.onSettingsShown = self.fetch_firmware_info;
     }
 
-    // View model class, parameters for constructor, container to bind to
+    // view model class, parameters for constructor, container to bind to
     OCTOPRINT_VIEWMODELS.push([
         FlashsailfishViewModel,
-        ["settingsViewModel", "loginStateViewModel", "connectionViewModel", "printerStateViewModel", "accessViewModel"],
-        ["#settings_plugin_flashsailfish", "#navbar_plugin_flashsailfish"]
+        [ "settingsViewModel" ],
+        [ "#settings_plugin_flashsailfish" ]
     ]);
 });
