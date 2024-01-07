@@ -16,6 +16,7 @@ $(function() {
         self.version = ko.observable(undefined);
         self.firmware_path = ko.observable(undefined);
         self.firmwareInfo = ko.observable({});
+        
         self.firmware_info = undefined;
 
         self.custom_selected = ko.computed(() => {
