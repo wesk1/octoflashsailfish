@@ -19,7 +19,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                           octoprint.plugin.EventHandlerPlugin):
     """OctoPrint plugin for flashing Sailfish firmware."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         """Initialize the FlashSailfishPlugin."""
         self.xml = None
         self.firmware_info = None
@@ -44,6 +44,13 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self._logger.exception(error)
         return error
 
+    @octoprint.plugin.BlueprintPlugin.route("/firmware_info", methods=["GET"])
+    @octoprint.server.util.flask.restricted_access
+    @admin_permission.require(403)
+    def get_firmware_info(self):
+        """Get firmware information."""
+        return self._firmware_info()
+
     @octoprint.plugin.BlueprintPlugin.route("/firmware_file", methods=["POST"])
     @octoprint.server.util.flask.restricted_access
     @admin_permission.require(403)
@@ -51,17 +58,10 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         """Handle firmware file upload."""
         pass
 
-    @octoprint.plugin.BlueprintPlugin.route("/firmware_info", methods=["GET"])
-    @octoprint.server.util.flask.restricted_access
-    @admin_permission.require(403)
-    def get_firmware_info(self, *args, **kwargs):
-        """Get firmware information."""
-        return self._firmware_info()
-
     @octoprint.plugin.BlueprintPlugin.route("/refresh_firmware_info", methods=["POST"])
     @octoprint.server.util.flask.restricted_access
     @admin_permission.require(403)
-    def refresh_firmware_info(self, *args, **kwargs):
+    def refresh_firmware_info(self):
         """Refresh firmware information."""
         if flask.request.json is not None and "url" in flask.request.json:
             self._settings.set(["url"], flask.request.json["url"])
@@ -107,14 +107,26 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         return flask.jsonify(boards)
 
     # ~~ SettingsPlugin API
-    def get_settings_defaults(self, *args, **kwargs):
+    def get_settings_defaults(self):
         return {
             "url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml",
             "enable_navbar": False,
         }
 
+    def on_settings_save(self, data):
+        octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
+
+        if "enable_navbar" in data:
+            enable_navbar = data["enable_navbar"]
+            if enable_navbar:
+                self._logger.info("Enabling display in navbar")
+                # Logic to add to navbar
+            else:
+                self._logger.info("Disabling display in navbar")
+                # Logic to remove from navbar
+
     # ~~ AssetPlugin API
-    def get_assets(self, *args, **kwargs):
+    def get_assets(self):
         return dict(
             js=["js/flashsailfish.js"],
             css=["css/flashsailfish.css"],
@@ -122,7 +134,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         )
 
     # ~~ Update hook
-    def get_update_information(self, *args, **kwargs):
+    def get_update_information(self):
         return dict(
             flashsailfish=dict(
                 displayName="Flash Sailfish",
@@ -165,20 +177,31 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
 
 
 class FlashException(Exception):
-    def __init__(self, reason, *args,):
-        super().__init__(*args,)
+    def __init__(self, reason):
+        super().__init__()
         self.reason = reason
 
 
 __plugin_name__ = "Flash Sailfish"
-__plugin_pythoncompat__ = ">=2.7,<4"
+
+__plugin_pythoncompat__ = ">=3.7,<4"
+
+# Set the global __plugin_implementation__ variable
+__plugin_implementation__ = FlashSailfishPlugin()
+
+# Set the global __plugin_hooks__ variable
+__plugin_hooks__ = {
+    "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
+}
 
 
+# Entry point for OctoPrint to load the plugin
 def __plugin_load__():
     global __plugin_implementation__
+    global __plugin_hooks__
+
     __plugin_implementation__ = FlashSailfishPlugin()
 
-    global __plugin_hooks__
     __plugin_hooks__ = {
         "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
     }
