@@ -1,9 +1,3 @@
-/*
- * View model for OctoPrint-FlashSailfish
- *
- * Author: Mark Walker
- * License: GPLv3
- */
 $(function() {
     function FlashsailfishViewModel(parameters) {
         const self = this;
@@ -17,6 +11,9 @@ $(function() {
         self.firmware_path = ko.observable(undefined);
         self.selectedFirmwareDescription = ko.observable("");
         self.firmware_info = undefined;
+
+        // Observable to store the uploaded filename
+        self.uploadedFilename = ko.observable("");
 
         self.custom_selected = ko.computed(() => {
             return self.version() === "custom";
@@ -42,6 +39,13 @@ $(function() {
                     contentType: false,
                     success: function(response) {
                         console.log("File upload successful:", response);
+
+                        // Check if the response contains the uploaded filename
+                        if (response && response.filename) {
+                            // Update the view model with the uploaded filename
+                            self.uploadedFilename(response.filename);
+                        }
+
                         // Add any further actions after a successful upload
                     },
                     error: function(error) {
@@ -97,26 +101,27 @@ $(function() {
                 }
             }
         });
+
         self.version.subscribe(function(newVersion) {
-    if (newVersion !== undefined && self.firmware_info !== undefined) {
-        const selectedBoard = self.board();
-        const firmwareInfo = self.firmware_info[selectedBoard];
+            if (newVersion !== undefined && self.firmware_info !== undefined) {
+                const selectedBoard = self.board();
+                const firmwareInfo = self.firmware_info[selectedBoard];
 
-        if (firmwareInfo !== undefined) {
-            const firmwareVersions = firmwareInfo.firmwares;
+                if (firmwareInfo !== undefined) {
+                    const firmwareVersions = firmwareInfo.firmwares;
 
-            if (firmwareVersions !== undefined) {
-                const selectedFirmware = firmwareVersions[newVersion];
+                    if (firmwareVersions !== undefined) {
+                        const selectedFirmware = firmwareVersions[newVersion];
 
-                if (selectedFirmware !== undefined && selectedFirmware.description !== undefined) {
-                    self.selectedFirmwareDescription(selectedFirmware.description);
-                } else {
-                    self.selectedFirmwareDescription("");
+                        if (selectedFirmware !== undefined && selectedFirmware.description !== undefined) {
+                            self.selectedFirmwareDescription(selectedFirmware.description);
+                        } else {
+                            self.selectedFirmwareDescription("");
+                        }
+                    }
                 }
             }
-        }
-    }
-});
+        });
 
         self.fetch_firmware_info = function() {
             $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
