@@ -76,24 +76,6 @@ $(function () {
             });
         };
 
-        self.uploadToTmp = function () {
-            // Use the same uploadFirmware function for /tmp upload
-            self.uploadFirmware("/plugin/flashsailfish/firmwares/", function (response) {
-                console.log("File upload to /firmwares successful:", response);
-
-                // Check if the response contains the uploaded filename
-                if (response && response.filename) {
-                    // Update the view model with the uploaded filename
-                    self.uploadedFilename(response.filename);
-                }
-
-                // Add any further actions after a successful upload
-            }, function (error) {
-                console.error("File upload to /firmwares failed:", error);
-                // Handle the error, if necessary
-            });
-        };
-
         self.refresh_firmware_xml = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
@@ -187,8 +169,22 @@ self.downloadFirmware = function () {
                     // Construct the download URL
                     const downloadUrl = `${baseUrlWithoutXml}/${relPath}`;
 
-                    // Fetch the firmware content and save it
-                    // ... (rest of the code remains the same)
+                    // Fetch the firmware content
+                    fetch(downloadUrl)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            // Save the firmware to the base directory
+                            const filename = `${baseDirectory}/${selectedBoard}_${selectedVersion}.hex`;
+                            const a = document.createElement('a');
+                            a.href = URL.createObjectURL(blob);
+                            a.download = filename;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        })
+                        .catch(error => {
+                            console.error("Error fetching firmware:", error);
+                        });
                 } else {
                     console.error("Relpath not available for the selected firmware version.");
                 }
@@ -202,6 +198,7 @@ self.downloadFirmware = function () {
         console.warn("Board and version must be selected before downloading firmware.");
     }
 };
+
 
 
         self.fetch_firmware_info = function () {
