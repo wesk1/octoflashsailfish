@@ -18,7 +18,7 @@
             <select id="boardSelect" data-bind="options: boards, value: board"></select>
         </div>
     </div>
-<!-- Version picker -->
+    <!-- Version picker -->
 <div class="control-group">
     <div class="controls">
         <label for="versionSelect">{{ _('Select the firmware version:') }}</label>
@@ -26,21 +26,21 @@
     </div>
 </div>
 
-<!-- Display Firmware Description -->
+    <!-- Display Firmware Description -->
 <div class="control-group">
     <label for="firmwareDescription">{{ _('Firmware Description:') }}</label>
     <div id="firmwareDescription" data-bind="text: selectedFirmwareDescription"></div>
 </div>
-        <!-- Flash firmware button -->
+    <!-- Flash firmware button -->
 <div class="control-group">
     <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
 </div>
 
-<!-- Update Custom button -->
+    <!-- Update Custom button -->
 <div class="control-group">
     <button class="btn btn-primary" data-bind="click: Upload_firmware">{{ _('Upload Custom Firmware') }}</button>
 </div>
-<!-- Hex file upload -->
+    <!-- Hex file upload -->
 <div class="control-group">
     <label class="control-label">{{ _('Custom firmware upload:') }}</label>
     <div class="input-prepend">
