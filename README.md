@@ -1,4 +1,5 @@
 # OctoPrint-FlashSailfish
+(INCOMPLETE)
 
 An OctoPrint plugin for updating the Sailfish firmware on your 3d printer.
 

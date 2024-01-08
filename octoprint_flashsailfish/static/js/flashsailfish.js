@@ -59,7 +59,7 @@ $(function () {
         // Modify flash_firmware to initiate the firmware flashing process
         self.flash_firmware = function () {
             // Use the uploadFirmware function to handle the file upload
-            self.uploadFirmware("/plugin/flashsailfish/firmware_file", function (response) {
+            self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
                 console.log("File upload successful:", response);
 
                 // Check if the response contains the uploaded filename
@@ -78,8 +78,8 @@ $(function () {
 
         self.uploadToTmp = function () {
             // Use the same uploadFirmware function for /tmp upload
-            self.uploadFirmware("/plugin/flashsailfish/upload_to_tmp", function (response) {
-                console.log("File upload to /tmp successful:", response);
+            self.uploadFirmware("/plugin/flashsailfish/firmwares/", function (response) {
+                console.log("File upload to /firmwares successful:", response);
 
                 // Check if the response contains the uploaded filename
                 if (response && response.filename) {
@@ -89,7 +89,7 @@ $(function () {
 
                 // Add any further actions after a successful upload
             }, function (error) {
-                console.error("File upload to /tmp failed:", error);
+                console.error("File upload to /firmwares failed:", error);
                 // Handle the error, if necessary
             });
         };

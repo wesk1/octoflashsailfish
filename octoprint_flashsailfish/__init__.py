@@ -8,6 +8,7 @@ import requests
 import xmltodict
 import tempfile
 import octoprint.plugin
+import xml.etree.ElementTree as ET  # Importing XML parsing module
 
 from octoprint.server import admin_permission
 from werkzeug.utils import secure_filename
@@ -128,6 +129,40 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
             else:
                 self._logger.info(f"Skipping board {repr(board_xml)}")
         return flask.jsonify(boards)
+
+    def _download_firmware_from_xml(self, xml_path, destination_dir):
+        tree = ET.parse(xml_path)
+        root = tree.getroot()
+
+        # Assuming the 'relpath' element contains the relative path to the firmware
+        relpath = root.find(".//relpath").text
+
+        # Construct the firmware URL
+        firmware_url = f"https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/{relpath}"
+
+        # Ensure the directory exists before downloading
+        os.makedirs(destination_dir, exist_ok=True)
+
+        # Download the firmware
+        destination_path = os.path.join(destination_dir, os.path.basename(relpath))
+        response = requests.get(firmware_url)
+
+        if response.status_code == 200:
+            with open(destination_path, 'wb') as firmware_file:
+                firmware_file.write(response.content)
+            self._logger.info(f"Firmware downloaded successfully to {destination_path}")
+        else:
+            self._logger.error(f"Failed to download firmware. Status code: {response.status_code}")
+
+    @octoprint.plugin.BlueprintPlugin.route("/download_firmware", methods=["POST"])
+    @octoprint.server.util.flask.restricted_access
+    @admin_permission.require(403)
+    def download_firmware(self):
+        """Download firmware from the provided XML path."""
+        xml_path = flask.request.json.get("xml_path")
+        destination_dir = flask.request.json.get("destination_dir")
+        self._download_firmware_from_xml(xml_path, destination_dir)
+        return flask.jsonify({"message": "Firmware download initiated."})
 
     # ~~ SettingsPlugin API
     def get_settings_defaults(self):
