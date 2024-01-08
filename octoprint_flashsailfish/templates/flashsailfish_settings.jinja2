@@ -36,10 +36,6 @@
     <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
 </div>
 
-    <!-- Update Custom button -->
-<div class="control-group">
-    <button class="btn btn-primary" data-bind="click: Upload_firmware">{{ _('Upload Custom Firmware') }}</button>
-</div>
     <!-- Hex file upload -->
 <div class="control-group">
     <label class="control-label">{{ _('Custom firmware upload:') }}</label>
@@ -49,9 +45,14 @@
             <input type="file" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}" id="fileInput">
         </span>
         <span class="add-on" data-bind="text: firmware_path"></span>
-    </div>
-    <!-- Label to display selected filename -->
+            <!-- Label to display selected filename -->
     <label id="selectedFileNameLabel" class="control-label" style="margin-top: 5px;"></label>
+    </div>
+</div>
+
+    <!-- Update Custom button -->
+<div class="control-group">
+    <button class="btn btn-primary" data-bind="click: Upload_firmware">{{ _('Upload Custom Firmware') }}</button>
 </div>
 
 
