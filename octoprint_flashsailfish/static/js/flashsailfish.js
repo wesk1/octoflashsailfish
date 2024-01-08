@@ -2,6 +2,8 @@ const fs = require('fs');
 const os = require('os');
 
 const baseDirectory = os.homedir() + "/OctoPrint/plugins/flashsailfish/firmwares";
+const downloadProcessPanel = $("#downloadProcessPanel");
+const downloadProgressBar = $("#downloadProgressBar");
 
 // Check if the directory exists, and create it if not
 if (!fs.existsSync(baseDirectory)) {
@@ -155,6 +157,8 @@ self.downloadFirmware = function () {
     if (self.board() && self.version()) {
         const selectedBoard = self.board();
         const selectedVersion = self.version();
+		// Show the download process panel
+		downloadProcessPanel.show();
 
         // Get the firmware info
         const firmwareInfo = self.firmware_info[selectedBoard];
@@ -180,8 +184,37 @@ self.downloadFirmware = function () {
 
                     // Fetch the firmware content
                     fetch(downloadUrl)
-                        .then(response => response.blob())
-                        .then(blob => {
+						.then(response => {
+							const contentLength = response.headers.get('content-length');
+							let receivedBytes = 0;
+							
+							// Update progress bar based on download progress
+							const updateProgress = () => {
+							const progress = (receivedBytes / contentLength) * 100;
+							downloadProgressBar.width(progress + "%");
+							downloadProgressBar.text(progress.toFixed(2) + "%");
+						};
+						// Stream the response and update progress
+						const reader = response.body.getReader();
+						return new ReadableStream({
+							start(controller) {
+							const pump = () => reader.read().then(({ done, value }) => {
+								if (done) {
+								controller.close();
+								return;
+                        }
+                        controller.enqueue(value);
+                        receivedBytes += value.length;
+                        updateProgress();
+                        pump();
+                    });
+                    pump();
+                }
+            });
+        })
+        .then(blob => {
+            // Hide the download process panel when the download is complete
+            downloadProcessPanel.hide();
                             // Save the firmware to the base directory
                             const filename = `${baseDirectory}/${selectedBoard}_${selectedVersion}.hex`;
                             const a = document.createElement('a');
@@ -207,6 +240,7 @@ self.downloadFirmware = function () {
         console.warn("Board and version must be selected before downloading firmware.");
     }
 };
+
 
 
 
