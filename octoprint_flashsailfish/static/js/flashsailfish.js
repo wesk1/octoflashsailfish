@@ -1,4 +1,10 @@
+const fs = require('fs');
+const os = require('os');
 
+const baseDirectory = os.homedir() + "/OctoPrint/plugins/flashsailfish/firmwares";
+const downloadProcessPanel = $("#downloadProcessPanel");
+const downloadProgressBar = $("#downloadProgressBar");
+const baseUrl = self.settings.settings.plugins.flashsailfish.url();
 
 $(function () {
     function FlashsailfishViewModel(parameters) {
@@ -59,7 +65,7 @@ $(function () {
         };
 
         // Modify Upload_firmware to initiate the firmware flashing process
-        self.Upload_firmware = function () {
+        self.flash_firmware = function () {
             // Use the uploadFirmware function to handle the file upload
             self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
                 console.log("File upload successful:", response);
@@ -100,6 +106,9 @@ $(function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
                 self.refresh_observables();
+                // Log the base URL
+                const baseUrl = self.settings.settings.plugins.flashsailfish.url();
+                console.log("Base URL:", baseUrl);
             });
         };
 
