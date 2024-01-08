@@ -13,6 +13,9 @@ import xml.etree.ElementTree as ET  # Importing XML parsing module
 from octoprint.server import admin_permission
 from werkzeug.utils import secure_filename
 
+# FirmwareRetriever class definition
+
+
 class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                           octoprint.plugin.TemplatePlugin,
                           octoprint.plugin.AssetPlugin,
@@ -187,27 +190,6 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                 user="wesk1",
                 repo="octoflashsailfish",
                 current=self._plugin_version,
-							
- 								# stable releases
-                stable_branch=dict(
-                    name="Stable",
-                    branch="master",
-                    comittish=["master"]
-                ),
-
-                # release candidates
-                prerelease_branches=[
-                    dict(
-                        name="Release Candidate",
-                        branch="rc",
-                        comittish=["rc", "master"],
-                    ),
-                    dict(
-                        name="Development",
-                        branch="devel",
-                        comittish=["devel", "rc", "master"],
-                    )
-                ],
 
                 # update method: pip
                 pip="https://github.com/wesk1/octoflashsailfish/archive/{target_version}.zip"
@@ -217,14 +199,25 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     def is_blueprint_csrf_protected(self):
         return True
 
+
 class FlashException(Exception):
-    def __init__(self, reason, *args, **kwargs):
-        Exception.__init__(self, *args, **kwargs)
+    def __init__(self, reason):
+        super().__init__()
         self.reason = reason
+
 
 __plugin_name__ = "Flash Sailfish"
 
 __plugin_pythoncompat__ = ">=3.7,<4"
+
+# Set the global __plugin_implementation__ variable
+__plugin_implementation__ = FlashSailfishPlugin()
+
+# Set the global __plugin_hooks__ variable
+__plugin_hooks__ = {
+    "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
+}
+
 
 # Entry point for OctoPrint to load the plugin
 def __plugin_load__():
