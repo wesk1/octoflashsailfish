@@ -248,9 +248,6 @@ self.downloadFirmware = function () {
     }
 };
 
-
-
-
         self.fetch_firmware_info = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
