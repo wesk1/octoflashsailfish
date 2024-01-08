@@ -1,39 +1,36 @@
-$(function() {
+$(function () {
     function FlashsailfishViewModel(parameters) {
         const self = this;
 
         self.settings = parameters[0];
 
         self.boards = ko.observableArray([]);
-        self.board = ko.observable(undefined);
+        self.board = ko.observable();
         self.versions = ko.observableArray([]);
-        self.version = ko.observable(undefined);
-        self.firmware_path = ko.observable(undefined);
+        self.version = ko.observable();
+        self.firmware_path = ko.observable();
         self.selectedFirmwareDescription = ko.observable("");
         self.firmware_info = undefined;
 
         // Observable to store the uploaded filename
         self.uploadedFilename = ko.observable("");
 
-        self.custom_selected = ko.computed(() => {
-            return self.version() === "custom";
-        });
-
         // Observable for displaying the selected filename
         self.selectedFileName = ko.observable("");
 
         // Function to update the label with the selected filename
-        self.updateSelectedFileName = function() {
+        self.updateSelectedFileName = function () {
             const fileInput = document.getElementById("fileInput");
-            const selectedFileNameLabel = document.getElementById("selectedFileNameLabel");
 
-            fileInput.addEventListener("change", function() {
+            // Ensure that the event handler is triggered when the file selection changes
+            $(fileInput).on("change", function () {
                 // Update the label with the selected filename
                 self.selectedFileName(this.files.length > 0 ? this.files[0].name : "");
             });
         };
 
-        self.flash_firmware = function() {
+        // Separate function to handle file upload
+        self.uploadFirmware = function (url, successCallback, errorCallback) {
             const fileInput = document.getElementById("fileInput");
 
             // Check if a file is selected
@@ -47,78 +44,64 @@ $(function() {
                 // Make a POST request to the server to handle the file upload
                 $.ajax({
                     type: "POST",
-                    url: "/plugin/flashsailfish/firmware_file",
+                    url: url,
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(response) {
-                        console.log("File upload successful:", response);
-
-                        // Check if the response contains the uploaded filename
-                        if (response && response.filename) {
-                            // Update the view model with the uploaded filename
-                            self.uploadedFilename(response.filename);
-                        }
-
-                        // Add any further actions after a successful upload
-                    },
-                    error: function(error) {
-                        console.error("File upload failed:", error);
-                        // Handle the error, if necessary
-                    }
+                    success: successCallback,
+                    error: errorCallback
                 });
             } else {
                 console.warn("No file selected for upload");
             }
         };
 
-        self.uploadToTmp = function() {
-            const fileInput = document.getElementById("fileInput");
+        // Modify flash_firmware to initiate the firmware flashing process
+        self.flash_firmware = function () {
+            // Use the uploadFirmware function to handle the file upload
+            self.uploadFirmware("/plugin/flashsailfish/firmware_file", function (response) {
+                console.log("File upload successful:", response);
 
-            // Check if a file is selected
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
+                // Check if the response contains the uploaded filename
+                if (response && response.filename) {
+                    // Update the view model with the uploaded filename
+                    self.uploadedFilename(response.filename);
+                }
 
-                // Create a FormData object to send the file
-                const formData = new FormData();
-                formData.append("file", file);
-
-                // Make a POST request to the server to handle the file upload to /tmp
-                $.ajax({
-                    type: "POST",
-                    url: "/plugin/flashsailfish/upload_to_tmp",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        console.log("File upload to /tmp successful:", response);
-
-                        // Check if the response contains the uploaded filename
-                        if (response && response.filename) {
-                            // Update the view model with the uploaded filename
-                            self.uploadedFilename(response.filename);
-                        }
-
-                        // Add any further actions after a successful upload
-                    },
-                    error: function(error) {
-                        console.error("File upload to /tmp failed:", error);
-                        // Handle the error, if necessary
-                    }
-                });
-            } else {
-                console.warn("No file selected for upload");
-            }
+                // Add any further actions after a successful upload
+                // (For example, initiate the firmware flashing process here)
+            }, function (error) {
+                console.error("File upload failed:", error);
+                // Handle the error, if necessary
+            });
         };
 
-        self.refresh_firmware_xml = function() {
-            $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
+        self.uploadToTmp = function () {
+            // Use the same uploadFirmware function for /tmp upload
+            self.uploadFirmware("/plugin/flashsailfish/upload_to_tmp", function (response) {
+                console.log("File upload to /tmp successful:", response);
+
+                // Check if the response contains the uploaded filename
+                if (response && response.filename) {
+                    // Update the view model with the uploaded filename
+                    self.uploadedFilename(response.filename);
+                }
+
+                // Add any further actions after a successful upload
+            }, function (error) {
+                console.error("File upload to /tmp failed:", error);
+                // Handle the error, if necessary
+            });
+        };
+
+        self.refresh_firmware_xml = function () {
+            $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
                 self.refresh_observables();
             });
         };
 
-        self.refresh_observables = function() {
+        self.refresh_observables = function () {
             self.boards.removeAll();  // Clear the array first
             self.versions.removeAll();  // Clear the versions array
             if (self.firmware_info !== undefined) {
@@ -136,10 +119,10 @@ $(function() {
             }
         };
 
-        self.board.subscribe(function(newBoard) {
+        self.board.subscribe(function (newBoard) {
             self.versions.removeAll();  // Clear the versions array first
             if (newBoard !== undefined && self.firmware_info !== undefined) {
-                const firmwareVersions = self.firmware_info[newBoard].firmwares;  // Fix: Access the 'firmwares' property
+                const firmwareVersions = self.firmware_info[newBoard]?.firmwares;  // Fix: Access the 'firmwares' property using optional chaining
 
                 if (firmwareVersions !== undefined) {
                     for (const version in firmwareVersions) {
@@ -155,7 +138,7 @@ $(function() {
             }
         });
 
-        self.version.subscribe(function(newVersion) {
+        self.version.subscribe(function (newVersion) {
             if (newVersion !== undefined && self.firmware_info !== undefined) {
                 const selectedBoard = self.board();
                 const firmwareInfo = self.firmware_info[selectedBoard];
@@ -176,8 +159,8 @@ $(function() {
             }
         });
 
-        self.fetch_firmware_info = function() {
-            $.getJSON("/plugin/flashsailfish/firmware_info", function(data) {
+        self.fetch_firmware_info = function () {
+            $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
                 self.refresh_observables();
             });
@@ -192,7 +175,7 @@ $(function() {
     // view model class, parameters for constructor, container to bind to
     OCTOPRINT_VIEWMODELS.push([
         FlashsailfishViewModel,
-        [ "settingsViewModel" ],
-        [ "#settings_plugin_flashsailfish" ]
+        ["settingsViewModel"],
+        ["#settings_plugin_flashsailfish"]
     ]);
 });
