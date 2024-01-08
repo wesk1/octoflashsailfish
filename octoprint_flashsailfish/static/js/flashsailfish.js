@@ -159,20 +159,11 @@ $(function () {
             }
         });
 
-        // Add this function to your FlashsailfishViewModel
 self.downloadFirmware = function () {
     // Check if board and version are selected
     if (self.board() && self.version()) {
         const selectedBoard = self.board();
         const selectedVersion = self.version();
-
-        // Define the base directory where you want to save the firmware
-        const baseDirectory = `~/OctoPrint/plugins/flashsailfish`;
-
-        // Check if the base directory exists, create it if not
-        if (!fs.existsSync(baseDirectory)) {
-            fs.mkdirSync(baseDirectory, { recursive: true });
-        }
 
         // Get the firmware info
         const firmwareInfo = self.firmware_info[selectedBoard];
@@ -187,25 +178,17 @@ self.downloadFirmware = function () {
 
                 // Check if relpath is available
                 if (relPath) {
-                    // Construct the download URL
-                    const downloadUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relPath;
+                    // Get the base URL from the plugin settings
+                    const baseUrl = self.settings.settings.plugins.flashsailfish.url();
 
-                    // Fetch the firmware content
-                    fetch(downloadUrl)
-                        .then(response => response.blob())
-                        .then(blob => {
-                            // Save the firmware to the base directory
-                            const filename = `${baseDirectory}/${selectedBoard}_${selectedVersion}.hex`;
-                            const a = document.createElement('a');
-                            a.href = URL.createObjectURL(blob);
-                            a.download = filename;
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                        })
-                        .catch(error => {
-                            console.error("Error fetching firmware:", error);
-                        });
+                    // Remove the last segment (firmware.xml) from the base URL
+                    const baseUrlWithoutXml = baseUrl.replace(/\/firmware.xml$/, '');
+
+                    // Construct the download URL
+                    const downloadUrl = `${baseUrlWithoutXml}/${relPath}`;
+
+                    // Fetch the firmware content and save it
+                    // ... (rest of the code remains the same)
                 } else {
                     console.error("Relpath not available for the selected firmware version.");
                 }
@@ -219,6 +202,7 @@ self.downloadFirmware = function () {
         console.warn("Board and version must be selected before downloading firmware.");
     }
 };
+
 
         self.fetch_firmware_info = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
