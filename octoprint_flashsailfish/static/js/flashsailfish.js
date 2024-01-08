@@ -19,7 +19,7 @@ $(function() {
             return self.version() === "custom";
         });
 
-        self.flash_firmware = function() {
+        self.Upload_firmware = function() {
             const fileInput = document.getElementById("fileInput");
         const selectedFileNameLabel = document.getElementById("selectedFileNameLabel");
 
