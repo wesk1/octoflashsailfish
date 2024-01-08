@@ -5,7 +5,7 @@
         <div class="controls">
             <div class="input-append">
                 <label for="firmwareUrl">{{ _('Firmware update URL:') }}</label>
-                <input type="text" id="firmwareUrl" data-bind="value: self.settings.settings.plugins.flashsailfish.url">
+                <input type="text" id="firmwareUrl" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
                 <button class="btn btn-primary" type="button" data-bind="click: refresh_firmware_xml"><i class="icon-refresh"></i></button>
             </div>
         </div>
@@ -37,7 +37,7 @@
 <div class="control-group">
     <button class="btn btn-primary" data-bind="click: downloadFirmware">{{ _('Download Firmware') }}</button>
 </div>
-   <!-- Hex file upload -->
+    <!-- Hex file upload -->
 <div class="control-group">
     <label class="control-label">{{ _('Custom firmware upload:') }}</label>
     <div class="input-prepend">
@@ -46,25 +46,16 @@
             <input type="file" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}" id="fileInput">
         </span>
         <span class="add-on" data-bind="text: firmware_path"></span>
-        <!-- Label to display selected filename -->
-        <label id="selectedFileNameLabel" class="control-label" style="margin-top: 5px;"></label>
-        <!-- Update Custom button -->
-        <button class="btn btn-primary" data-bind="click: Upload_firmware">{{ _('Upload Custom Firmware') }}</button>
+            <!-- Label to display selected filename -->
+    <label id="selectedFileNameLabel" class="control-label" style="margin-top: 5px;"></label>
     </div>
 </div>
-<!-- Process panel -->
-<div id="downloadProcessPanel" class="panel panel-default" style="display: none;">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ _('Download Progress') }}</h3>
-    </div>
-    <div class="panel-body">
-        <div class="progress">
-            <div id="downloadProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-                0%
-            </div>
-        </div>
-    </div>
+    <!-- Update Custom button -->
+<div class="control-group">
+    <button class="btn btn-primary" data-bind="click: Upload_firmware">{{ _('Upload Custom Firmware') }}</button>
 </div>
+
+    <!-- Progress panel -->
 
     <!-- automatically check for updates and notify -->
 
