@@ -1,3 +1,12 @@
+const fs = require('fs');
+const os = require('os');
+
+const baseDirectory = os.homedir() + "/OctoPrint/plugins/flashsailfish/firmwares";
+
+// Check if the directory exists, and create it if not
+if (!fs.existsSync(baseDirectory)) {
+    fs.mkdirSync(baseDirectory, { recursive: true });
+}
 $(function () {
     function FlashsailfishViewModel(parameters) {
         const self = this;
