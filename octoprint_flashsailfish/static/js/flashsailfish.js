@@ -13,13 +13,13 @@ $(function() {
         self.firmware_info = undefined;
 
         // Observable to store the uploaded filename
-        self.Upload_firmware = ko.observable("");
+        self.uploadedFilename = ko.observable("");
 
         self.custom_selected = ko.computed(() => {
             return self.version() === "custom";
         });
 
-        self.Upload_firmware = function() {
+        self.flash_firmware = function() {
             const fileInput = document.getElementById("fileInput");
         const selectedFileNameLabel = document.getElementById("selectedFileNameLabel");
 
