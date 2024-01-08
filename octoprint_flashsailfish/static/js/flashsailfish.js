@@ -44,7 +44,7 @@ $(function () {
         };
 
         // Separate function to handle file upload
-        self.uploadFirmware = function (url, successCallback, errorCallback) {
+        self.upload_firmware = function (url, successCallback, errorCallback) {
             const fileInput = document.getElementById("fileInput");
 
             // Check if a file is selected
@@ -73,7 +73,7 @@ $(function () {
         // Modify Upload_firmware to initiate the firmware flashing process
         self.Upload_firmware = function () {
             // Use the uploadFirmware function to handle the file upload
-            self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
+            self.upload_Firmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
                 console.log("File upload successful:", response);
 
                 // Check if the response contains the uploaded filename
