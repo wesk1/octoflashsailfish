@@ -60,8 +60,8 @@ $(function () {
 
         // New function to handle firmware download
         self.downloadFirmware = function () {
-            // Use the uploadFirmware function to handle the file download
-            self.uploadFirmware("/plugin/flashsailfish/firmware_file", function (response) {
+            // Make a GET request to the server to handle the file download
+            $.get("/plugin/flashsailfish/firmware_file", function (response) {
                 console.log("Firmware download successful:", response);
 
                 // Check if the response contains the downloaded filename
@@ -72,7 +72,7 @@ $(function () {
                     // Add any further actions after a successful download
                     // (For example, display a success message or update UI)
                 }
-            }, function (error) {
+            }).fail(function (error) {
                 console.error("Firmware download failed:", error);
                 // Handle the error, if necessary
             });
