@@ -8,7 +8,6 @@
                 <input type="text" id="firmwareUrl" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
                 <button class="btn btn-primary" type="button" data-bind="click: refresh_firmware_xml"><i class="icon-refresh"></i></button>
             </div>
-
         </div>
     </div>
     <!-- Machine picker -->
@@ -25,7 +24,6 @@
         <select id="versionSelect" data-bind="options: versions, value: version"></select>
     </div>
 </div>
-
     <!-- Display Firmware Description -->
 <div class="control-group">
     <label for="firmwareDescription">{{ _('Firmware Description:') }}</label>
@@ -35,7 +33,6 @@
 <div class="control-group">
     <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
 </div>
-
     <!-- Hex file upload -->
 <div class="control-group">
     <label class="control-label">{{ _('Custom firmware upload:') }}</label>
@@ -49,12 +46,10 @@
     <label id="selectedFileNameLabel" class="control-label" style="margin-top: 5px;"></label>
     </div>
 </div>
-
     <!-- Update Custom button -->
 <div class="control-group">
     <button class="btn btn-primary" data-bind="click: Upload_firmware">{{ _('Upload Custom Firmware') }}</button>
 </div>
-
 
     <!-- Progress panel -->
 
