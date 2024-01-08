@@ -180,10 +180,24 @@ self.downloadFirmware = function () {
                 // Check if relpath is available
                 if (relPath) {
                     // Construct the download URL
-                    const downloadUrl = "http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relPath;
+                    const downloadUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relPath;
 
-                    // Open a new window or tab to initiate the download
-                    window.open(downloadUrl, "_blank");
+                    // Fetch the firmware content
+                    fetch(downloadUrl)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            // Save the firmware to /tmp/ directory
+                            const filename = `/tmp/${selectedBoard}_${selectedVersion}.hex`;
+                            const a = document.createElement('a');
+                            a.href = URL.createObjectURL(blob);
+                            a.download = filename;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        })
+                        .catch(error => {
+                            console.error("Error fetching firmware:", error);
+                        });
                 } else {
                     console.error("Relpath not available for the selected firmware version.");
                 }
