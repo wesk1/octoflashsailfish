@@ -159,6 +159,46 @@ $(function () {
             }
         });
 
+        // Add this function to your FlashsailfishViewModel
+self.downloadFirmware = function () {
+    // Check if board and version are selected
+    if (self.board() && self.version()) {
+        const selectedBoard = self.board();
+        const selectedVersion = self.version();
+
+        // Get the firmware info
+        const firmwareInfo = self.firmware_info[selectedBoard];
+
+        // Check if the firmware info is available
+        if (firmwareInfo && firmwareInfo.firmwares) {
+            const firmwareVersions = firmwareInfo.firmwares;
+
+            // Check if the selected version exists in the firmware info
+            if (firmwareVersions[selectedVersion]) {
+                const relPath = firmwareVersions[selectedVersion].relpath;
+
+                // Check if relpath is available
+                if (relPath) {
+                    // Construct the download URL
+                    const downloadUrl = "http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relPath;
+
+                    // Open a new window or tab to initiate the download
+                    window.open(downloadUrl, "_blank");
+                } else {
+                    console.error("Relpath not available for the selected firmware version.");
+                }
+            } else {
+                console.error("Selected version not found in firmware info.");
+            }
+        } else {
+            console.error("Firmware info not available for the selected board.");
+        }
+    } else {
+        console.warn("Board and version must be selected before downloading firmware.");
+    }
+};
+
+
         self.fetch_firmware_info = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
