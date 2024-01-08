@@ -1,5 +1,3 @@
-// flashsailfish.js
-
 $(function () {
     function FlashsailfishViewModel(parameters) {
         const self = this;
@@ -58,28 +56,8 @@ $(function () {
             }
         };
 
-        // New function to handle firmware download
-        self.downloadFirmware = function () {
-            // Make a GET request to the server to handle the file download
-            $.get("/plugin/flashsailfish/firmware_file", function (response) {
-                console.log("Firmware download successful:", response);
-
-                // Check if the response contains the downloaded filename
-                if (response && response.filename) {
-                    // Update the view model with the downloaded filename
-                    self.uploadedFilename(response.filename);
-
-                    // Add any further actions after a successful download
-                    // (For example, display a success message or update UI)
-                }
-            }).fail(function (error) {
-                console.error("Firmware download failed:", error);
-                // Handle the error, if necessary
-            });
-        };
-
         // Modify flash_firmware to initiate the firmware flashing process
-        self.flashFirmware = function () {
+        self.flash_firmware = function () {
             // Use the uploadFirmware function to handle the file upload
             self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
                 console.log("File upload successful:", response);
@@ -116,14 +94,14 @@ $(function () {
             });
         };
 
-        self.refreshFirmwareXml = function () {
+        self.refresh_firmware_xml = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
-                self.refreshObservables();
+                self.refresh_observables();
             });
         };
 
-        self.refreshObservables = function () {
+        self.refresh_observables = function () {
             self.boards.removeAll();  // Clear the array first
             self.versions.removeAll();  // Clear the versions array
             if (self.firmware_info !== undefined) {
@@ -181,14 +159,14 @@ $(function () {
             }
         });
 
-        self.fetchFirmwareInfo = function () {
+        self.fetch_firmware_info = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
-                self.refreshObservables();
+                self.refresh_observables();
             });
         };
 
-        self.onSettingsShown = self.fetchFirmwareInfo;
+        self.onSettingsShown = self.fetch_firmware_info;
 
         // Call the function to set up the file input change event
         self.updateSelectedFileName();
