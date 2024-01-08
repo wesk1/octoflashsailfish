@@ -166,6 +166,14 @@ self.downloadFirmware = function () {
         const selectedBoard = self.board();
         const selectedVersion = self.version();
 
+        // Define the base directory where you want to save the firmware
+        const baseDirectory = `~/OctoPrint/plugins/flashsailfish`;
+
+        // Check if the base directory exists, create it if not
+        if (!fs.existsSync(baseDirectory)) {
+            fs.mkdirSync(baseDirectory, { recursive: true });
+        }
+
         // Get the firmware info
         const firmwareInfo = self.firmware_info[selectedBoard];
 
@@ -186,8 +194,8 @@ self.downloadFirmware = function () {
                     fetch(downloadUrl)
                         .then(response => response.blob())
                         .then(blob => {
-                            // Save the firmware to /tmp/ directory
-                            const filename = `/tmp/${selectedBoard}_${selectedVersion}.hex`;
+                            // Save the firmware to the base directory
+                            const filename = `${baseDirectory}/${selectedBoard}_${selectedVersion}.hex`;
                             const a = document.createElement('a');
                             a.href = URL.createObjectURL(blob);
                             a.download = filename;
@@ -211,7 +219,6 @@ self.downloadFirmware = function () {
         console.warn("Board and version must be selected before downloading firmware.");
     }
 };
-
 
         self.fetch_firmware_info = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
