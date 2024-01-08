@@ -19,14 +19,22 @@ $(function() {
             return self.version() === "custom";
         });
 
+        // Observable for displaying the selected filename
+        self.selectedFileName = ko.observable("");
+
+        // Function to update the label with the selected filename
+        self.updateSelectedFileName = function() {
+            const fileInput = document.getElementById("fileInput");
+            const selectedFileNameLabel = document.getElementById("selectedFileNameLabel");
+
+            fileInput.addEventListener("change", function() {
+                // Update the label with the selected filename
+                self.selectedFileName(this.files.length > 0 ? this.files[0].name : "");
+            });
+        };
+
         self.flash_firmware = function() {
             const fileInput = document.getElementById("fileInput");
-        const selectedFileNameLabel = document.getElementById("selectedFileNameLabel");
-
-        fileInput.addEventListener("change", function() {
-            // Update the label with the selected filename
-            selectedFileNameLabel.textContent = this.files.length > 0 ? this.files[0].name : "";
-        });
 
             // Check if a file is selected
             if (fileInput.files.length > 0) {
@@ -78,7 +86,7 @@ $(function() {
                 // Make a POST request to the server to handle the file upload to /tmp
                 $.ajax({
                     type: "POST",
-                    url: "/plugin/flashsailfish/",
+                    url: "/plugin/flashsailfish/upload_to_tmp",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -176,6 +184,9 @@ $(function() {
         };
 
         self.onSettingsShown = self.fetch_firmware_info;
+
+        // Call the function to set up the file input change event
+        self.updateSelectedFileName();
     }
 
     // view model class, parameters for constructor, container to bind to
