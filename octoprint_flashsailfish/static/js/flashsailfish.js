@@ -78,7 +78,7 @@ $(function() {
                 // Make a POST request to the server to handle the file upload to /tmp
                 $.ajax({
                     type: "POST",
-                    url: "/plugin/flashsailfish/upload_to_tmp",
+                    url: "/plugin/flashsailfish/",
                     data: formData,
                     processData: false,
                     contentType: false,
