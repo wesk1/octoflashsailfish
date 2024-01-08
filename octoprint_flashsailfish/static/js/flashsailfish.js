@@ -13,7 +13,7 @@ $(function() {
         self.firmware_info = undefined;
 
         // Observable to store the uploaded filename
-        self.uploadedFilename = ko.observable("");
+        self.Upload_firmware = ko.observable("");
 
         self.custom_selected = ko.computed(() => {
             return self.version() === "custom";
