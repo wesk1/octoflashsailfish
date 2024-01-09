@@ -82,10 +82,6 @@ $(function () {
         console.log("Firmware Info Data:", data);
         self.firmware_info = data;
         self.refresh_observables();
-
-        // Log the base URL
-        const baseUrl = self.settings.settings.plugins.flashsailfish.url();
-        console.log("Base URL:", baseUrl);
     });
 };
         
@@ -152,18 +148,7 @@ self.downloadFirmware = function () {
     if (self.board() && self.version()) {
         const selectedBoard = self.board();
         const selectedVersion = self.version();
-        const fs = require('fs');
-        const os = require('os');
-
         const baseDirectory = os.homedir() + "/OctoPrint/plugins/flashsailfish/firmwares";
-        const downloadProcessPanel = $("#downloadProcessPanel");
-        const downloadProgressBar = $("#downloadProgressBar");
-        // Check if the directory exists, and create it if not
-        if (!fs.existsSync(baseDirectory)) {
-        fs.mkdirSync(baseDirectory, { recursive: true });
-		// Show the download process panel
-		downloadProcessPanel.show();
-
         // Get the firmware info
         const firmwareInfo = self.firmware_info[selectedBoard];
 
