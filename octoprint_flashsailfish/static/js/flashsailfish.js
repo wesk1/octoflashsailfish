@@ -152,6 +152,15 @@ self.downloadFirmware = function () {
     if (self.board() && self.version()) {
         const selectedBoard = self.board();
         const selectedVersion = self.version();
+        const fs = require('fs');
+        const os = require('os');
+
+        const baseDirectory = os.homedir() + "/OctoPrint/plugins/flashsailfish/firmwares";
+        const downloadProcessPanel = $("#downloadProcessPanel");
+        const downloadProgressBar = $("#downloadProgressBar");
+        // Check if the directory exists, and create it if not
+        if (!fs.existsSync(baseDirectory)) {
+        fs.mkdirSync(baseDirectory, { recursive: true });
 		// Show the download process panel
 		downloadProcessPanel.show();
 
