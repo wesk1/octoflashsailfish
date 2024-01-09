@@ -102,7 +102,7 @@ $(function () {
             }
         };
 
-        // Ensure that the versions dropdown gets updated when the board changes
+        // Firmware version dropdown gets updated when the board changes
         self.board.subscribe(function (newBoard) {
             self.versions.removeAll();
             if (newBoard !== undefined && self.firmware_info !== undefined) {
@@ -120,6 +120,28 @@ $(function () {
                 }
             }
         });
+		
+		// Firmware Description gets updated
+		self.version.subscribe(function (newVersion) {
+			if (newVersion !== undefined && self.firmware_info !== undefined) {
+				const selectedBoard = self.board();
+				const firmwareInfo = self.firmware_info[selectedBoard];
+
+				if (firmwareInfo !== undefined) {
+					const firmwareVersions = firmwareInfo.firmwares;
+
+					if (firmwareVersions !== undefined) {
+						const selectedFirmware = firmwareVersions[newVersion];
+
+						if (selectedFirmware !== undefined && selectedFirmware.description !== undefined) {
+							self.selectedFirmwareDescription(selectedFirmware.description);
+						} else {
+							self.selectedFirmwareDescription("");
+						}
+					}
+				}
+			}
+		});
 
         // Function to handle the "Refresh" button click
         self.refresh_button_click = function () {
