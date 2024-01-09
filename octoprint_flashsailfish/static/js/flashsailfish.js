@@ -200,7 +200,7 @@ $(function () {
         console.warn("No board or version selected");
     }
 };
-    
+
     // view model class, parameters for constructor, container to bind to
     OCTOPRINT_VIEWMODELS.push([
         FlashsailfishViewModel,
