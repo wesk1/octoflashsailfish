@@ -175,7 +175,7 @@ $(function () {
                 const firmwareUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
 
                 // Set the destination directory for the firmware download
-                const destinationDir = "/path/to/destination/directory"; // Update this with the desired destination directory
+                const destinationDir = "~/OctoPrint/flashsailfish/firmwares/"; // Update this with the desired destination directory
 
                 // Make a POST request to initiate the firmware download
                 $.ajax({
