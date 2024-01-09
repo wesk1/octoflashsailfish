@@ -1,5 +1,3 @@
-# coding=utf-8
-
 import flask
 import logging
 import logging.handlers
@@ -9,12 +7,8 @@ import xmltodict
 import tempfile
 import octoprint.plugin
 
-
 from octoprint.server import admin_permission
 from werkzeug.utils import secure_filename
-
-# FirmwareRetriever class definition
-
 
 class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                           octoprint.plugin.TemplatePlugin,
@@ -27,25 +21,24 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         """Initialize the FlashSailfishPlugin."""
         self.xml = None
         self.firmware_info = None
+        self.configure_logging()
+        super().__init__()
 
-        # Add logging setup here
+    def configure_logging(self):
+        """Configure logging."""
         self._logger = logging.getLogger(__name__)
         self._logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-        # You can customize the log file location here
         log_file_path = os.path.join(tempfile.gettempdir(), 'flash_sailfish.log')
-
         file_handler = logging.handlers.RotatingFileHandler(log_file_path, maxBytes=int(1e6), backupCount=3)
         file_handler.setFormatter(formatter)
         self._logger.addHandler(file_handler)
 
-        super().__init__()
-
     @octoprint.plugin.BlueprintPlugin.errorhandler(Exception)
     def errorhandler(self, error):
         """Handle unhandled exceptions and log them."""
-        self._logger.exception(error)
+        self._logger.exception("Unhandled exception:")
         return error
 
     @octoprint.plugin.BlueprintPlugin.route("/firmware_info", methods=["GET"])
