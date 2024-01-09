@@ -153,7 +153,54 @@ $(function () {
         // Call the function to set up the file input change event
         self.updateSelectedFileName();
     }
+        self.download_firmware = function () {
+    // Get the selected board and version
+    const selectedBoard = self.board();
+    const selectedVersion = self.version();
 
+    // Check if a board and version are selected
+    if (selectedBoard && selectedVersion) {
+        // Make a GET request to retrieve the firmware information
+        $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
+            // Get the firmware information for the selected board and version
+            const firmwareInfo = data[selectedBoard];
+            const selectedFirmware = firmwareInfo.firmwares[selectedVersion];
+
+            // Check if the firmware information is available
+            if (selectedFirmware) {
+                // Get the relative path for the firmware
+                const relpath = selectedFirmware.relpath;
+
+                // Construct the complete URL for the firmware download
+                const firmwareUrl = "http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
+
+                // Set the destination directory for the firmware download
+                const destinationDir = "/path/to/destination/directory"; // Update this with the desired destination directory
+
+                // Make a POST request to initiate the firmware download
+                $.ajax({
+                    type: "POST",
+                    url: "/plugin/flashsailfish/download_firmware",
+                    contentType: "application/json",
+                    data: JSON.stringify({ xml_path: firmwareUrl, destination_dir: destinationDir }),
+                    success: function (response) {
+                        console.log("Firmware download initiated:", response);
+                        // Add any further actions after a successful firmware download initiation
+                    },
+                    error: function (error) {
+                        console.error("Firmware download initiation failed:", error);
+                        // Handle the error, if necessary
+                    }
+                });
+            } else {
+                console.warn("Selected firmware information not available");
+            }
+        });
+    } else {
+        console.warn("No board or version selected");
+    }
+};
+    
     // view model class, parameters for constructor, container to bind to
     OCTOPRINT_VIEWMODELS.push([
         FlashsailfishViewModel,
