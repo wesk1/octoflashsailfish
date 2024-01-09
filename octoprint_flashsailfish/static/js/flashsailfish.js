@@ -4,7 +4,6 @@ const os = require('os');
 const baseDirectory = os.homedir() + "/OctoPrint/plugins/flashsailfish/firmwares";
 const downloadProcessPanel = $("#downloadProcessPanel");
 const downloadProgressBar = $("#downloadProgressBar");
-const baseUrl = self.settings.settings.plugins.flashsailfish.url();
 
 $(function () {
     function FlashsailfishViewModel(parameters) {
