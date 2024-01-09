@@ -83,6 +83,11 @@ $(function () {
             });
         };
 
+        // Function to handle the "Refresh" button click
+        self.refresh_button_click = function () {
+            self.fetch_firmware_info();
+        };
+
         // Function to refresh observable arrays
         self.refresh_observables = function () {
             self.boards.removeAll();
