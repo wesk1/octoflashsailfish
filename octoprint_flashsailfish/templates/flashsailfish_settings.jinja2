@@ -1,15 +1,16 @@
 <div id="settings_plugin_flashsailfish">
     <h4>Sailfish Firmware Updater</h4>
-    <!-- firmware update url -->
-    <div class="control-group">
-        <div class="controls">
-            <div class="input-append">
-                <label for="firmwareUrl">{{ _('Firmware update URL:') }}</label>
-                <input type="text" id="firmwareUrl" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
-                <button class="btn btn-primary" type="button" data-bind="click: refresh_firmware_xml"><i class="icon-refresh"></i></button>
-            </div>
+<!-- firmware update url -->
+<div class="control-group">
+    <div class="controls">
+        <div class="input-append">
+            <label for="firmwareUrl">{{ _('Firmware update URL:') }}</label>
+            <input type="text" id="firmwareUrl" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
+            <!-- Modify the click binding to call refresh_button_click -->
+            <button class="btn btn-primary" type="button" data-bind="click: refresh_button_click"><i class="icon-refresh"></i></button>
         </div>
     </div>
+</div>
     <!-- Machine picker -->
     <div class="control-group">
         <div class="controls">
