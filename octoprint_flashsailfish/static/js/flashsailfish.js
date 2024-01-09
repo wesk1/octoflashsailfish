@@ -67,13 +67,13 @@ $(function () {
                     self.uploadedFilename(response.filename);
                 }
 
-                // Add any further actions after a successful upload
+				 // Add any further actions after a successful upload
                 // (For example, initiate the firmware flashing process here)
             }, function (error) {
                 console.error("File upload failed:", error);
                 // Handle the error, if necessary
             });
-        };
+        };													
 
         // Function to refresh firmware information
         self.fetch_firmware_info = function () {
@@ -102,12 +102,31 @@ $(function () {
             }
         };
 
+        // Ensure that the versions dropdown gets updated when the board changes
+        self.board.subscribe(function (newBoard) {
+            self.versions.removeAll();
+            if (newBoard !== undefined && self.firmware_info !== undefined) {
+                const firmwareVersions = self.firmware_info[newBoard]?.firmwares;
+
+                if (firmwareVersions !== undefined) {
+                    for (const version in firmwareVersions) {
+                        if (firmwareVersions.hasOwnProperty(version)) {
+                            self.versions.push(version);
+                        }
+                    }
+
+                    console.log("Sorted Versions:", self.versions());
+                    self.versions.sort();
+                }
+            }
+        });
+
         // Function to handle the "Refresh" button click
         self.refresh_button_click = function () {
             self.fetch_firmware_info();
         };
 
-        // Call the function to set up the file input change event
+         // Call the function to set up the file input change event
         self.updateSelectedFileName();
 
         // Move the download_firmware function outside the fetch_firmware_info function
