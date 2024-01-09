@@ -11,7 +11,7 @@ $(function () {
         self.firmware_path = ko.observable();
         self.selectedFirmwareDescription = ko.observable("");
         self.firmware_info = undefined;
-        self.url = ko.observable(self.settings.settings.plugins.flashsailfish.url() || "https://example.com/default-firmware.xml");
+
         
         // Observable to store the uploaded filename
         self.uploadedFilename = ko.observable("");
