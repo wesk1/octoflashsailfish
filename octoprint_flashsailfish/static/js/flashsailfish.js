@@ -15,14 +15,16 @@ $(function () {
             this.uploadedFilename = ko.observable("");
             this.selectedFileName = ko.observable("");
 
+            // Update the event handler attachment to ensure it only gets added once
             this.updateSelectedFileName();
         }
 
         updateSelectedFileName() {
             const fileInput = document.getElementById("fileInput");
 
-            $(fileInput).on("change", function () {
-                this.selectedFileName(this.files.length > 0 ? this.files[0].name : "");
+            // Ensure that the event handler is triggered only once
+            $(fileInput).off("change").on("change", () => {
+                this.selectedFileName(fileInput.files.length > 0 ? fileInput.files[0].name : "");
             });
         }
 
@@ -69,6 +71,7 @@ $(function () {
             };
 
             fetchData();
+            // Attach the event handler once on initialization
             this.onSettingsShown = fetchData;
         }
 
@@ -86,6 +89,7 @@ $(function () {
                 this.boards.sort();
             }
         }
+
 
         board.subscribe((newBoard) => {
             this.versions.removeAll();
