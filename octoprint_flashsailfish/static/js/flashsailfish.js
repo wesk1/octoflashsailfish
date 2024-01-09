@@ -11,7 +11,8 @@ $(function () {
         self.firmware_path = ko.observable();
         self.selectedFirmwareDescription = ko.observable("");
         self.firmware_info = undefined;
-
+        self.url = ko.observable(self.settings.settings.plugins.flashsailfish.url() || "https://example.com/default-firmware.xml");
+        
         // Observable to store the uploaded filename
         self.uploadedFilename = ko.observable("");
 
@@ -30,7 +31,7 @@ $(function () {
         };
 
         // Separate function to handle file upload
-        self.uploadFirmware = function (url, successCallback, errorCallback) {
+        self.uploadfirmware = function (url, successCallback, errorCallback) {
             const fileInput = document.getElementById("fileInput");
 
             // Check if a file is selected
@@ -77,15 +78,17 @@ $(function () {
         };
 
         self.refresh_firmware_xml = function () {
-            $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
-                self.firmware_info = data;
-                self.refresh_observables();
-                // Log the base URL
-                const baseUrl = self.settings.settings.plugins.flashsailfish.url();
-                console.log("Base URL:", baseUrl);
-            });
-        };
+    $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
+        console.log("Firmware Info Data:", data);
+        self.firmware_info = data;
+        self.refresh_observables();
 
+        // Log the base URL
+        const baseUrl = self.settings.settings.plugins.flashsailfish.url();
+        console.log("Base URL:", baseUrl);
+    });
+};
+        
         self.refresh_observables = function () {
             self.boards.removeAll();  // Clear the array first
             self.versions.removeAll();  // Clear the versions array
@@ -144,7 +147,6 @@ $(function () {
             }
         });
 
-        // Add this function to your FlashsailfishViewModel
 self.downloadFirmware = function () {
     // Check if board and version are selected
     if (self.board() && self.version()) {
