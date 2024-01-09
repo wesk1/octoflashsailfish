@@ -163,13 +163,13 @@ self.downloadFirmware = function () {
                 // Check if relpath is available
                 if (relPath) {
                     // Get the base URL from the plugin settings
-                    const baseUrl = self.settings.settings.plugins.flashsailfish.url();
+                    const url = self.settings.settings.plugins.flashsailfish.url();
 
                     // Remove the last segment (firmware.xml) from the base URL
-                    const baseUrlWithoutXml = baseUrl.replace(/\/firmware.xml$/, '');
+                    const urlWithoutXml = url.replace(/\/firmware.xml$/, '');
 
                     // Construct the download URL
-                    const downloadUrl = `${baseUrlWithoutXml}/${relPath}`;
+                    const downloadUrl = `${urlWithoutXml}/${relPath}`;
 
                     // Fetch the firmware content
                     fetch(downloadUrl)
