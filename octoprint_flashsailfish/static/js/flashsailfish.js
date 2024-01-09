@@ -12,7 +12,6 @@ $(function () {
         self.selectedFirmwareDescription = ko.observable("");
         self.firmware_info = undefined;
 
-        
         // Observable to store the uploaded filename
         self.uploadedFilename = ko.observable("");
 
@@ -31,7 +30,7 @@ $(function () {
         };
 
         // Separate function to handle file upload
-        self.uploadfirmware = function (url, successCallback, errorCallback) {
+        self.uploadFirmware = function (url, successCallback, errorCallback) {
             const fileInput = document.getElementById("fileInput");
 
             // Check if a file is selected
@@ -57,7 +56,7 @@ $(function () {
             }
         };
 
-        // Modify Upload_firmware to initiate the firmware flashing process
+        // Modify flash_firmware to initiate the firmware flashing process
         self.flash_firmware = function () {
             // Use the uploadFirmware function to handle the file upload
             self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
@@ -76,15 +75,14 @@ $(function () {
                 // Handle the error, if necessary
             });
         };
-
-        self.refresh_firmware_xml = function () {
-    $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
-        console.log("Firmware Info Data:", data);
-        self.firmware_info = data;
-        self.refresh_observables();
-    });
-};
         
+        self.refresh_firmware_xml = function () {
+            $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
+                self.firmware_info = data;
+                self.refresh_observables();
+            });
+        };
+
         self.refresh_observables = function () {
             self.boards.removeAll();  // Clear the array first
             self.versions.removeAll();  // Clear the versions array
@@ -142,93 +140,6 @@ $(function () {
                 }
             }
         });
-
-self.downloadFirmware = function () {
-    // Check if board and version are selected
-    if (self.board() && self.version()) {
-        const selectedBoard = self.board();
-        const selectedVersion = self.version();
-        const baseDirectory = os.homedir() + "/OctoPrint/plugins/flashsailfish/firmwares";
-        // Get the firmware info
-        const firmwareInfo = self.firmware_info[selectedBoard];
-
-        // Check if the firmware info is available
-        if (firmwareInfo && firmwareInfo.firmwares) {
-            const firmwareVersions = firmwareInfo.firmwares;
-
-            // Check if the selected version exists in the firmware info
-            if (firmwareVersions[selectedVersion]) {
-                const relPath = firmwareVersions[selectedVersion].relpath;
-
-                // Check if relpath is available
-                if (relPath) {
-                    // Get the base URL from the plugin settings
-                    const url = self.settings.settings.plugins.flashsailfish.url();
-
-                    // Remove the last segment (firmware.xml) from the base URL
-                    const urlWithoutXml = url.replace(/\/firmware.xml$/, '');
-
-                    // Construct the download URL
-                    const downloadUrl = `${urlWithoutXml}/${relPath}`;
-
-                    // Fetch the firmware content
-                    fetch(downloadUrl)
-						.then(response => {
-							const contentLength = response.headers.get('content-length');
-							let receivedBytes = 0;
-							
-							// Update progress bar based on download progress
-							const updateProgress = () => {
-							const progress = (receivedBytes / contentLength) * 100;
-							downloadProgressBar.width(progress + "%");
-							downloadProgressBar.text(progress.toFixed(2) + "%");
-						};
-						// Stream the response and update progress
-						const reader = response.body.getReader();
-						return new ReadableStream({
-							start(controller) {
-							const pump = () => reader.read().then(({ done, value }) => {
-								if (done) {
-								controller.close();
-								return;
-                        }
-                        controller.enqueue(value);
-                        receivedBytes += value.length;
-                        updateProgress();
-                        pump();
-                    });
-                    pump();
-                }
-            });
-        })
-        .then(blob => {
-            // Hide the download process panel when the download is complete
-            downloadProcessPanel.hide();
-                            // Save the firmware to the base directory
-                            const filename = `${baseDirectory}/${selectedBoard}_${selectedVersion}.hex`;
-                            const a = document.createElement('a');
-                            a.href = URL.createObjectURL(blob);
-                            a.download = filename;
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                        })
-                        .catch(error => {
-                            console.error("Error fetching firmware:", error);
-                        });
-                } else {
-                    console.error("Relpath not available for the selected firmware version.");
-                }
-            } else {
-                console.error("Selected version not found in firmware info.");
-            }
-        } else {
-            console.error("Firmware info not available for the selected board.");
-        }
-    } else {
-        console.warn("Board and version must be selected before downloading firmware.");
-    }
-};
 
         self.fetch_firmware_info = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
