@@ -172,7 +172,7 @@ $(function () {
                 const relpath = selectedFirmware.relpath;
 
                 // Construct the complete URL for the firmware download
-                const firmwareUrl = "http://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
+                const firmwareUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
 
                 // Set the destination directory for the firmware download
                 const destinationDir = "/path/to/destination/directory"; // Update this with the desired destination directory
