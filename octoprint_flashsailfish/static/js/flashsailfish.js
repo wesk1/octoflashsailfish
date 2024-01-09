@@ -76,24 +76,6 @@ $(function () {
             });
         };
 
-        self.uploadToTmp = function () {
-            // Use the same uploadFirmware function for /tmp upload
-            self.uploadFirmware("/plugin/flashsailfish/firmwares/", function (response) {
-                console.log("File upload to /firmwares successful:", response);
-
-                // Check if the response contains the uploaded filename
-                if (response && response.filename) {
-                    // Update the view model with the uploaded filename
-                    self.uploadedFilename(response.filename);
-                }
-
-                // Add any further actions after a successful upload
-            }, function (error) {
-                console.error("File upload to /firmwares failed:", error);
-                // Handle the error, if necessary
-            });
-        };
-
         self.refresh_firmware_xml = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
@@ -168,14 +150,8 @@ self.downloadFirmware = function () {
     if (self.board() && self.version()) {
         const selectedBoard = self.board();
         const selectedVersion = self.version();
-
-        // Define the base directory where you want to save the firmware
-        const baseDirectory = `~/OctoPrint/plugins/flashsailfish`;
-
-        // Check if the base directory exists, create it if not
-        if (!fs.existsSync(baseDirectory)) {
-            fs.mkdirSync(baseDirectory, { recursive: true });
-        }
+		// Show the download process panel
+		downloadProcessPanel.show();
 
         // Get the firmware info
         const firmwareInfo = self.firmware_info[selectedBoard];
@@ -190,13 +166,48 @@ self.downloadFirmware = function () {
 
                 // Check if relpath is available
                 if (relPath) {
+                    // Get the base URL from the plugin settings
+                    const baseUrl = self.settings.settings.plugins.flashsailfish.url();
+
+                    // Remove the last segment (firmware.xml) from the base URL
+                    const baseUrlWithoutXml = baseUrl.replace(/\/firmware.xml$/, '');
+
                     // Construct the download URL
-                    const downloadUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relPath;
+                    const downloadUrl = `${baseUrlWithoutXml}/${relPath}`;
 
                     // Fetch the firmware content
                     fetch(downloadUrl)
-                        .then(response => response.blob())
-                        .then(blob => {
+						.then(response => {
+							const contentLength = response.headers.get('content-length');
+							let receivedBytes = 0;
+							
+							// Update progress bar based on download progress
+							const updateProgress = () => {
+							const progress = (receivedBytes / contentLength) * 100;
+							downloadProgressBar.width(progress + "%");
+							downloadProgressBar.text(progress.toFixed(2) + "%");
+						};
+						// Stream the response and update progress
+						const reader = response.body.getReader();
+						return new ReadableStream({
+							start(controller) {
+							const pump = () => reader.read().then(({ done, value }) => {
+								if (done) {
+								controller.close();
+								return;
+                        }
+                        controller.enqueue(value);
+                        receivedBytes += value.length;
+                        updateProgress();
+                        pump();
+                    });
+                    pump();
+                }
+            });
+        })
+        .then(blob => {
+            // Hide the download process panel when the download is complete
+            downloadProcessPanel.hide();
                             // Save the firmware to the base directory
                             const filename = `${baseDirectory}/${selectedBoard}_${selectedVersion}.hex`;
                             const a = document.createElement('a');
