@@ -75,7 +75,7 @@ $(function () {
                 // Handle the error, if necessary
             });
         };
-        
+
         self.refresh_firmware_xml = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
