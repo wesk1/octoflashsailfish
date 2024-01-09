@@ -154,19 +154,18 @@ $(function () {
         self.updateSelectedFileName();
     }
         self.download_firmware = function () {
-    // Get the selected board and version
-    const selectedBoard = self.board();
-    const selectedVersion = self.version();
+            // Get the selected board and version
+            const selectedBoard = self.board();
+            const selectedVersion = self.version();
 
-    // Check if a board and version are selected
-    if (selectedBoard && selectedVersion) {
-        // Make a GET request to retrieve the firmware information
-        $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
-            // Get the firmware information for the selected board and version
-            const firmwareInfo = data[selectedBoard];
-            const selectedFirmware = firmwareInfo.firmwares[selectedVersion];
+             // Check if a board and version are selected
+            if (selectedBoard && selectedVersion) {// Make a GET request to retrieve the firmware information
+            $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
+                // Get the firmware information for the selected board and version
+                const firmwareInfo = data[selectedBoard];
+                const selectedFirmware = firmwareInfo.firmwares[selectedVersion];
 
-            // Check if the firmware information is available
+                 // Check if the firmware information is available
             if (selectedFirmware) {
                 // Get the relative path for the firmware
                 const relpath = selectedFirmware.relpath;
@@ -175,7 +174,7 @@ $(function () {
                 const firmwareUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
 
                 // Set the destination directory for the firmware download
-                const destinationDir = "~/OctoPrint/flashsailfish/firmwares/"; // Update this with the desired destination directory
+                const destinationDir = "~/OctoPrint/flashsailfish/firmwares"; // Update this with the desired destination directory
 
                 // Make a POST request to initiate the firmware download
                 $.ajax({
