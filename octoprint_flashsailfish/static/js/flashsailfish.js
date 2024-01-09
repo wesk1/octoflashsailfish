@@ -83,11 +83,6 @@ $(function () {
             });
         };
 
-        // Function to handle the "Refresh" button click
-        self.refresh_button_click = function () {
-            self.fetch_firmware_info();
-        };
-
         // Function to refresh observable arrays
         self.refresh_observables = function () {
             self.boards.removeAll();
@@ -105,6 +100,11 @@ $(function () {
                 console.log("Sorted Boards:", self.boards());
                 self.boards.sort();
             }
+        };
+
+        // Function to handle the "Refresh" button click
+        self.refresh_button_click = function () {
+            self.fetch_firmware_info();
         };
 
         // Call the function to set up the file input change event
