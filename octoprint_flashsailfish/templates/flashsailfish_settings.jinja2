@@ -35,7 +35,7 @@
 </div>
     <!-- Download firmware button -->
 <div class="control-group">
-    <button class="btn btn-primary" data-bind="click: downloadFirmware">{{ _('Download Firmware') }}</button>
+    <button class="btn btn-primary" data-bind="click: auto_download_firmware">{{ _('Download Firmware') }}</button>
 </div>
     <!-- Hex file upload -->
 <div class="control-group">
@@ -55,19 +55,7 @@
     <button class="btn btn-primary" data-bind="click: Upload_firmware">{{ _('Upload Custom Firmware') }}</button>
 </div>
 
-<!-- Process panel -->
-<div id="downloadProcessPanel" class="panel panel-default" style="display: none;">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ _('Download Progress') }}</h3>
-    </div>
-    <div class="panel-body">
-        <div class="progress">
-            <div id="downloadProgressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-                0%
-            </div>
-        </div>
-    </div>
-</div>
+    <!-- Progress panel -->
 
     <!-- automatically check for updates and notify -->
 
