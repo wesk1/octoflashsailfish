@@ -32,7 +32,7 @@ $(function () {
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
 
-                // Create a FormData object to send the fileis
+                // Create a FormData object to send the file is
                 const formData = new FormData();
                 formData.append("file", file);
 
