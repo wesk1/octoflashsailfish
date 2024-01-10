@@ -1,3 +1,5 @@
+that works, can we add a label to my jinja code so when the download completes it shows the user
+
 <div id="settings_plugin_flashsailfish">
     <h4>Sailfish Firmware Updater</h4>
 <!-- firmware update url -->
@@ -34,10 +36,12 @@
 <div class="control-group">
     <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
 </div>
-    <!-- Download firmware button -->
-<div class="control-group">
-    <button class="btn btn-primary" data-bind="click: download_firmware">{{ _('Download Firmware') }}</button>
-</div>
+   <!-- Download firmware button -->
+    <div class="control-group">
+        <button class="btn btn-primary" data-bind="click: download_firmware">{{ _('Download Firmware') }}</button>
+        <!-- Add a label to display download completion message -->
+        <label id="downloadMessageLabel" class="control-label" style="margin-top: 5px;"></label>
+    </div>
     <!-- Hex file upload -->
 <div class="control-group">
     <label class="control-label">{{ _('Custom firmware upload:') }}</label>
