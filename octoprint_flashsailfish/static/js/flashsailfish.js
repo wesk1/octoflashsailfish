@@ -174,7 +174,7 @@ $(function () {
                         const firmwareUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
                         console.log("Constructed Firmware URL:", firmwareUrl);
                         // Set the destination directory for the firmware download (replace "~" with the absolute path)
-                        const destinationDir = "/opt/octoprint/flashsailfish/firmwares";
+                        const destinationDir = "/opt/octoprint/flashsailfish/firmwares/";
 
                         // Make a POST request to initiate the firmware download
                         $.ajax({
@@ -183,7 +183,7 @@ $(function () {
                             contentType: "application/json",
                             data: JSON.stringify({
 							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
-							destination_dir: "/opt/octoprint/flashsailfish/firmwares"
+							destination_dir: "/opt/octoprint/flashsailfish/firmwares/"
 							}),
                             success: function(data) {
 							// Set the content of the download message label
