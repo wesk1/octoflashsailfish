@@ -10,6 +10,7 @@ import octoprint.plugin
 from octoprint.server import admin_permission
 from werkzeug.utils import secure_filename
 
+
 class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                           octoprint.plugin.TemplatePlugin,
                           octoprint.plugin.AssetPlugin,
@@ -22,19 +23,18 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self.xml = None
         self.firmware_info = None
         self.configure_logging()
-        self.create_directory()
+        self.create_directory()  # Call the method to create the directory
         super().__init__()
 
-	def create_directory(self):
+    def create_directory(self):
         """Create the directory if it doesn't exist."""
-        directory_path = "~/OctoPrint/flashsailfish/firmwares/"
-        if not os.path.exists(directory_path):
-            try:
-                os.makedirs(directory_path)
-                self._logger.info(f"Directory '{directory_path}' created successfully.")
-            except Exception as e:
-                self._logger.exception(f"Error creating directory '{directory_path}': {e}")
-
+    directory_path = os.path.join(os.path.expanduser("~"), 'OctoPrint', 'flashsailfish', 'firmwares')
+    if not os.path.exists(directory_path):
+        try:
+            os.makedirs(directory_path)
+            self._logger.info(f"Directory '{directory_path}' created successfully.")
+        except Exception as e:
+            self._logger.exception(f"Error creating directory '{directory_path}': {e}")
 
     def configure_logging(self):
         """Configure logging."""
@@ -220,6 +220,8 @@ __plugin_hooks__ = {
 }
 
 # Entry point for OctoPrint to load the plugin
+
+
 def __plugin_load__():
     global __plugin_implementation__
     global __plugin_hooks__

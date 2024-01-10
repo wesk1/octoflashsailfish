@@ -36,7 +36,7 @@ $(function () {
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
 
-                // Create a FormData object to send the fileis 
+                // Create a FormData object to send the fileis
                 const formData = new FormData();
                 formData.append("file", file);
 
@@ -73,7 +73,7 @@ $(function () {
                 console.error("File upload failed:", error);
                 // Handle the error, if necessary
             });
-        };													
+        };
 
         // Function to refresh firmware information
         self.fetch_firmware_info = function () {
@@ -120,7 +120,7 @@ $(function () {
                 }
             }
         });
-		
+
 		// Firmware Description gets updated
 		self.version.subscribe(function (newVersion) {
 			if (newVersion !== undefined && self.firmware_info !== undefined) {
@@ -173,8 +173,6 @@ $(function () {
                         // Construct the complete URL for the firmware download
                         const firmwareUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
                         console.log("Constructed Firmware URL:", firmwareUrl);
-                        // Set the destination directory for the firmware download (replace "~" with the absolute path)
-                        const destinationDir = "~/OctoPrint/flashsailfish/firmwares/";
 
                         // Make a POST request to initiate the firmware download
                         $.ajax({
@@ -185,7 +183,7 @@ $(function () {
 							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
 							destination_dir: "~/OctoPrint/flashsailfish/firmwares/"
 							}),
-                            success: function(data) {
+                            success: function() {
 							// Set the content of the download message label
 							$("#downloadMessageLabel").text("Firmware download completed successfully!");
 							},
