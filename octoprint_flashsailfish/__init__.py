@@ -26,14 +26,14 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         super().__init__()
 
     def create_directory(self):
-        """Create the directory if it doesn't exist."""
-        directory_path = "~/OctoPrint/flashsailfish/firmwares/"
-        if not os.path.exists(directory_path):
-            try:
-                os.makedirs(directory_path)
-                self._logger.info(f"Directory '{directory_path}' created successfully.")
-            except Exception as e:
-                self._logger.exception(f"Error creating directory '{directory_path}': {e}")
+    """Create the directory if it doesn't exist."""
+	directory_path = os.path.join(os.path.expanduser("~"), 'OctoPrint', 'flashsailfish', 'firmwares')
+    if not os.path.exists(self.directory_path):
+        try:
+            os.makedirs(self.directory_path)
+            self._logger.info(f"Directory '{self.directory_path}' created successfully.")
+        except Exception as e:
+            self._logger.exception(f"Error creating directory '{self.directory_path}': {e}")
 
     def configure_logging(self):
         """Configure logging."""
