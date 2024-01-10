@@ -10,23 +10,19 @@ $(function () {
         self.firmware_path = ko.observable();
         self.selectedFirmwareDescription = ko.observable("");
         self.firmware_info = undefined;
-
-        // Observable to store the uploaded filename
-        self.uploadedFilename = ko.observable("");
-
-        // Observable for displaying the selected filename
-        self.selectedFileName = ko.observable("");
+		self.uploadedFilename = ko.observable("");
+		self.selectedFileName = ko.observable("");
 
         // Function to update the label with the selected filename
         self.updateSelectedFileName = function () {
-            const fileInput = document.getElementById("fileInput");
-
-            // Ensure that the event handler is triggered when the file selection changes
-            $(fileInput).on("change", function () {
+			// Event listener for file input change
+            $("#fileInput").on("change", function () {
                 // Update the label with the selected filename
                 self.selectedFileName(this.files.length > 0 ? this.files[0].name : "");
             });
         };
+		// Call the function to set up the file input change event
+        self.updateSelectedFileName();
 
         // Separate function to handle file upload
         self.uploadFirmware = function (url, successCallback, errorCallback) {
