@@ -157,6 +157,10 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                         firmware = dict()
                         firmware["relpath"] = firmware_xml["@relpath"]
                         firmware["description"] = firmware_xml["@description"]
+                        firmware["protocol"] = firmware_xml.get("protocol", "")
+                        firmware["speed"] = firmware_xml.get("speed", "")
+                        firmware["arch"] = firmware_xml.get("arch", "")
+                        firmware["manualreset"] = firmware_xml.get("manualreset", "")
                         board["firmwares"][firmware_xml["@name"]] = firmware
                     else:
                         self._logger.info(f"Skipping firmware {repr(firmware_xml)}")
@@ -218,8 +222,6 @@ __plugin_implementation__ = FlashSailfishPlugin()
 __plugin_hooks__ = {
     "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
 }
-
-# Entry point for OctoPrint to load the plugin
 
 
 def __plugin_load__():
