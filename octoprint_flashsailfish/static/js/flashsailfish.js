@@ -181,7 +181,10 @@ $(function () {
                             type: "POST",
                             url: "/plugin/flashsailfish/download_firmware",
                             contentType: "application/json",
-                            data: JSON.stringify({ xml_path: firmwareUrl, destination_dir: destinationDir }),
+                            data: JSON.stringify({
+							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
+							destination_dir: "/opt/octoprint/flashsailfish/firmwares"
+							}),
                             success: function (response) {
                                 console.log("Firmware download initiated:", response);
                                 // Add any further actions after a successful firmware download initiation
