@@ -22,7 +22,18 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self.xml = None
         self.firmware_info = None
         self.configure_logging()
+		self.create_directory()
         super().__init__()
+		
+	def create_directory(self):
+        """Create the directory if it doesn't exist."""
+        directory_path = "/opt/octoprint/flashsailfish/firmwares"
+        if not os.path.exists(directory_path):
+            try:
+                os.makedirs(directory_path)
+                self._logger.info(f"Directory '{directory_path}' created successfully.")
+            except Exception as e:
+                self._logger.exception(f"Error creating directory '{directory_path}': {e}")
 
     def configure_logging(self):
         """Configure logging."""
@@ -92,13 +103,13 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         try:
             data = flask.request.json
             xml_path = data.get("url")
-            destination_dir = "/tmp/"  # Update this to the desired destination directory
+            destination_dir = "/opt/octoprint/flashsailfish/firmwares"  # Update this to the desired destination directory
 					
             response = requests.get(xml_path)
             firmware_content = response.content
 
             # Save the firmware to the specified destination directory
-            with open(os.path.join(destination_dir, "downloaded_firmware.bin"), "wb") as firmware_file:
+            with open(os.path.join(destination_dir, "downloaded_firmware.hex"), "wb") as firmware_file:
                 firmware_file.write(firmware_content)
 
             return flask.jsonify({"message": "Firmware download initiated"})
