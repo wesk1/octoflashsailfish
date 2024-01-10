@@ -85,6 +85,27 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self.xml = None
         return self._firmware_info()
 
+    @octoprint.plugin.BlueprintPlugin.route("/download_firmware", methods=["POST"])
+    @octoprint.server.util.flask.restricted_access
+    @admin_permission.require(403)
+    def download_firmware(self):
+        try:
+            data = flask.request.json
+            xml_path = data.get("url")
+            destination_dir = "/tmp/"  # Update this to the desired destination directory
+					
+            response = requests.get(xml_path)
+            firmware_content = response.content
+
+            # Save the firmware to the specified destination directory
+            with open(os.path.join(destination_dir, "downloaded_firmware.bin"), "wb") as firmware_file:
+                firmware_file.write(firmware_content)
+
+            return flask.jsonify({"message": "Firmware download initiated"})
+        except Exception as e:
+            self._logger.exception("Firmware download initiation failed:")
+            return flask.make_response("Firmware download initiation failed", 500)
+
     def _firmware_info(self):
         """Retrieve and parse firmware information."""
         if self.xml is None:
