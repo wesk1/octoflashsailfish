@@ -22,10 +22,10 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self.xml = None
         self.firmware_info = None
         self.configure_logging()
-		self.create_directory()
+        self.create_directory()
         super().__init__()
-		
-	def create_directory(self):
+
+    def create_directory(self):
         """Create the directory if it doesn't exist."""
         directory_path = "/opt/octoprint/flashsailfish/firmwares"
         if not os.path.exists(directory_path):
@@ -104,12 +104,21 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
             data = flask.request.json
             xml_path = data.get("url")
             destination_dir = "/opt/octoprint/flashsailfish/firmwares"  # Update this to the desired destination directory
-					
+
             response = requests.get(xml_path)
             firmware_content = response.content
 
+            # Extract firmware information from the XML path (modify this logic based on your XML structure)
+            firmware_info = xmltodict.parse(response.text)
+            board_name = firmware_info["board"]["@name"]
+            firmware_name = firmware_info["firmware"]["@name"]
+            firmware_version = firmware_info["firmware"]["@version"]
+
+            # Construct a meaningful filename based on the firmware information
+            filename = f"{board_name}-{firmware_name}-v{firmware_version}.hex"
+
             # Save the firmware to the specified destination directory
-            with open(os.path.join(destination_dir, "downloaded_firmware.hex"), "wb") as firmware_file:
+            with open(os.path.join(destination_dir, filename), "wb") as firmware_file:
                 firmware_file.write(firmware_content)
 
             return flask.jsonify({"message": "Firmware download initiated"})
@@ -208,7 +217,6 @@ __plugin_implementation__ = FlashSailfishPlugin()
 __plugin_hooks__ = {
     "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
 }
-
 
 # Entry point for OctoPrint to load the plugin
 def __plugin_load__():
