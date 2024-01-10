@@ -148,7 +148,7 @@ $(function () {
         self.updateSelectedFileName();
 
         // Move the download_firmware function outside the fetch_firmware_info function
-        self.download_firmware = function () {
+            self.download_firmware = function () {
             // Get the selected board and version
             const selectedBoard = self.board();
             const selectedVersion = self.version();
@@ -169,24 +169,22 @@ $(function () {
                         // Construct the complete URL for the firmware download
                         const firmwareUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
                         console.log("Constructed Firmware URL:", firmwareUrl);
+                        // Set the destination directory for the firmware download
+                        const destinationDir = "/opt/octoprint/flashsailfish/firmwares";
 
                         // Make a POST request to initiate the firmware download
                         $.ajax({
                             type: "POST",
                             url: "/plugin/flashsailfish/download_firmware",
                             contentType: "application/json",
-                            data: JSON.stringify({
-							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
-							destination_dir: "~/OctoPrint/flashsailfish/firmwares/"
-							}),
-                            success: function() {
-							// Set the content of the download message label
-							$("#downloadMessageLabel").text("Firmware download completed successfully!");
-							},
-							error: function(xhr, status, error) {
-							// Handle error if needed
-							console.error("Firmware download failed:", error);
-							$("#downloadMessageLabel").text("Firmware download failed!");
+                            data: JSON.stringify({ xml_path: firmwareUrl, destination_dir: destinationDir }),
+                            success: function (response) {
+                                console.log("Firmware download initiated:", response);
+                                // Add any further actions after a successful firmware download initiation
+                            },
+                            error: function (error) {
+                                console.error("Firmware download initiation failed:", error);
+                                // Handle the error, if necessary
                             }
                         });
                     } else {
