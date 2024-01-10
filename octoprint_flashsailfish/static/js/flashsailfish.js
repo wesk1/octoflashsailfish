@@ -36,7 +36,7 @@ $(function () {
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
 
-                // Create a FormData object to send the file
+                // Create a FormData object to send the fileis 
                 const formData = new FormData();
                 formData.append("file", file);
 
@@ -185,13 +185,14 @@ $(function () {
 							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
 							destination_dir: "/opt/octoprint/flashsailfish/firmwares"
 							}),
-                            success: function (response) {
-                                console.log("Firmware download initiated:", response);
-                                // Add any further actions after a successful firmware download initiation
-                            },
-                            error: function (error) {
-                                console.error("Firmware download initiation failed:", error);
-                                // Handle the error, if necessary
+                            success: function(data) {
+							// Set the content of the download message label
+							$("#downloadMessageLabel").text("Firmware download completed successfully!");
+							},
+							error: function(xhr, status, error) {
+							// Handle error if needed
+							console.error("Firmware download failed:", error);
+							$("#downloadMessageLabel").text("Firmware download failed!");
                             }
                         });
                     } else {
