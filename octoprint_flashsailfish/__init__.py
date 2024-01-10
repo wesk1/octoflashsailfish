@@ -63,7 +63,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     @octoprint.plugin.BlueprintPlugin.route("/firmware_file", methods=["POST"])
     @octoprint.server.util.flask.restricted_access
     @admin_permission.require(403)
-    def firmware_file(self, *args, **kwargs):
+    def firmware_file(self):
         print("File upload initiated")
         """Handle firmware file upload."""
         target_folder = "/tmp/"  # Update this to the desired target folder
@@ -123,8 +123,8 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                 firmware_file.write(firmware_content)
 
             return flask.jsonify({"message": "Firmware download initiated"})
-        except Exception as e:
-            self._logger.exception("Firmware download initiation failed:")
+        except Exception as f:
+            self._logger.exception(f"Firmware download initiation failed: {firmware_file}: {f}")
             return flask.make_response("Firmware download initiation failed", 500)
 
     def _firmware_info(self):
