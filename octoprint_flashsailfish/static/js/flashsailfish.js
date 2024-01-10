@@ -177,7 +177,7 @@ $(function () {
                             contentType: "application/json",
                             data: JSON.stringify({
 							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
-							destination_dir: "/OctoPrint/flashsailfish/firmwares/"
+							destination_dir: "/tmp/flashsailfish/firmwares/"
 							}),
                             success: function() {
 							// Set the content of the download message label
