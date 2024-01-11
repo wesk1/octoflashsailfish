@@ -28,7 +28,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
 
     def create_directory(self):
         """Create the directory if it doesn't exist."""
-        directory_path = os.path.join(os.path.expanduser("/opt/octoprint/flashsailfish/firmwares"))
+        directory_path = os.path.join(os.path.expanduser("/opt/OctoPrint/flashsailfish/firmwares/"))
         if not os.path.exists(directory_path):
             try:
                 os.makedirs(directory_path)
@@ -104,7 +104,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         try:
             data = flask.request.json
             xml_path = data.get("url")
-            destination_dir = "/opt/octoprint/flashsailfish/firmwares/"  # Update this to the desired destination
+            destination_dir = "/opt/OctoPrint/flashsailfish/firmwares/"  # Update this to the desired destination
 
             response = requests.get(xml_path)
             firmware_content = response.content
