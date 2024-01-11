@@ -99,7 +99,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self.xml = None
         return self._firmware_info()
 
-    @octoprint.plugin.BlueprintPlugin.route("/download_firmware", methods=["GET", "POST"])
+    @octoprint.plugin.BlueprintPlugin.route("/download_firmware", methods=["GET"])
     @octoprint.server.util.flask.restricted_access
     @admin_permission.require(403)
     def download_firmware(self):
