@@ -167,7 +167,8 @@ $(function () {
                         const relpath = selectedFirmware.relpath;
 
                         // Construct the complete URL for the firmware download
-                        const firmwareUrl = self.settings.settings.plugins.flashsailfish.base_url + relpath;
+                        const baseUrl = OctoPrint.settings.settings.plugins.flashsailfish.base_url;
+                        const firmwareUrl = baseUrl + relpath;
                         console.log("Constructed Firmware URL:", firmwareUrl);
 
                         // Make a POST request to initiate the firmware download
