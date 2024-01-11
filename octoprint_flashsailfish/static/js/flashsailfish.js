@@ -173,7 +173,7 @@ $(function () {
                         // Make a POST request to initiate the firmware download
                         $.ajax({
                             type: "POST",
-                            url: self.settings.settings.plugins.flashsailfish.upload_url,
+                            url: "/plugin/flashsailfish/download_firmware",
                             contentType: "application/json",
                             data: JSON.stringify({
 							url: firmwareUrl,
