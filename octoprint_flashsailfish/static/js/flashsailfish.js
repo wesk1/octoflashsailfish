@@ -161,28 +161,56 @@ $(function () {
         const firmwareUrl = baseUrl + firmwareRelativePath;
 
         console.log("Constructed Firmware URL:", firmwareUrl);
-
         // Make a GET request to retrieve the firmware content
-        $.ajax({
-            type: "GET",
-            url: firmwareUrl,
-            success: function () {
+    $.ajax({
+        type: "GET",
+        url: firmwareUrl,
+        success: function (firmwareContent) {
+            // Handle success - firmware content is available in the 'firmwareContent' variable
+            console.log("Firmware content:", firmwareContent);
+
+            // Get the selected board and version
+            const selectedBoard = self.board();
+            const selectedVersion = self.version();
+
+            // Check if a board and version are selected
+            if (selectedBoard && selectedVersion) {
+                // Get the filename from the firmware information
+                const firmwareFilename = self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath.split('/').pop();
+
+                // Now, you can save the firmware content to the desired local path with the extracted filename
+                const localPath = "/opt/octoprint/flashsailfish/firmwares/";
+                const fullPath = localPath + firmwareFilename;
+
+                // Example: Save firmware content to the local path
+                // Note: This is a simplified example, and you may need to adjust it based on your actual firmware content
+                saveFirmwareToLocalPath(firmwareContent, fullPath);
+
                 // Set the content of the download message label
                 $("#downloadMessageLabel").text("Firmware download completed successfully!");
-            },
-            error: function (xhr, status, error) {
-                // Handle error
-                console.error("Firmware download failed:", error);
-                $("#downloadMessageLabel").text("Firmware download failed!");
-
-                // Log a warning if selected firmware information is not available
-                console.warn("Selected firmware information not available");
+            } else {
+                console.warn("No board or version selected");
             }
-        });
-    } else {
-        console.warn("No board or version selected");
-    }
+        },
+        error: function (xhr, status, error) {
+            // Handle error
+            console.error("Firmware download failed:", error);
+            $("#downloadMessageLabel").text("Firmware download failed!");
+
+            // Log a warning if selected firmware information is not available
+            console.warn("Selected firmware information not available");
+        }
+    });
 };
+
+// New function to save firmware content to the local path
+function saveFirmwareToLocalPath(firmwareContent, fullPath) {
+    // Example: Save firmware content to the local path
+    // Note: This is a simplified example, and you may need to adjust it based on your actual firmware content
+    console.log("Saving firmware to:", fullPath);
+    // Add your logic to save 'firmwareContent' to 'fullPath'
+}
+        
 
     // view model class, parameters for constructor, container to bind to
     OCTOPRINT_VIEWMODELS.push([
