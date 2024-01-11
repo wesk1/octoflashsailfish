@@ -148,6 +148,7 @@ $(function () {
         self.updateSelectedFileName();
 
         // Move the download_firmware function outside the fetch_firmware_info function
+         // Move the download_firmware function outside the fetch_firmware_info function
         self.download_firmware = function () {
             // Get the selected board and version
             const selectedBoard = self.board();
@@ -156,7 +157,7 @@ $(function () {
             // Check if a board and version are selected
             if (selectedBoard && selectedVersion) {
                 // Make a GET request to retrieve the firmware information
-                $.getJSON("/plugin/flashsailfish/download_firmware", function (data) {
+                $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                     // Get the firmware information for the selected board and version
                     const firmwareInfo = data[selectedBoard];
                     const selectedFirmware = firmwareInfo.firmwares[selectedVersion];
@@ -167,8 +168,7 @@ $(function () {
                         const relpath = selectedFirmware.relpath;
 
                         // Construct the complete URL for the firmware download
-                        const baseUrl = OctoPrint.settings.settings.plugins.flashsailfish.base_url;
-                        const firmwareUrl = baseUrl + relpath;
+                        const firmwareUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
                         console.log("Constructed Firmware URL:", firmwareUrl);
 
                         // Make a POST request to initiate the firmware download
@@ -177,17 +177,17 @@ $(function () {
                             url: "/plugin/flashsailfish/download_firmware",
                             contentType: "application/json",
                             data: JSON.stringify({
-							url: baseUrl + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
-							destination_dir: "/opt/OctoPrint/flashsailfish/firmwares/"
+							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
+							destination_dir: "/opt/octoprint/flashsailfish/firmwares/"
 							}),
                             success: function() {
 							// Set the content of the download message label
-							$("#downloadMessageLabel").html("Firmware download completed successfully!");
+							$("#downloadMessageLabel").text("Firmware download completed successfully!");
 							},
 							error: function(xhr, status, error) {
 							// Handle error if needed
 							console.error("Firmware download failed:", error);
-							$("#downloadMessageLabel").html("Firmware download failed!");
+							$("#downloadMessageLabel").text("Firmware download failed!");
                             }
                         });
                     } else {
