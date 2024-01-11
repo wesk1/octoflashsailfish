@@ -167,13 +167,13 @@ $(function () {
                         const relpath = selectedFirmware.relpath;
 
                         // Construct the complete URL for the firmware download
-                        const firmwareUrl = "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + relpath;
+                        const firmwareUrl = self.settings.settings.plugins.flashsailfish.base_url + relpath;
                         console.log("Constructed Firmware URL:", firmwareUrl);
 
                         // Make a POST request to initiate the firmware download
                         $.ajax({
                             type: "POST",
-                            url: "/plugin/flashsailfish/download_firmware",
+                            url: self.settings.settings.plugins.flashsailfish.upload_url,
                             contentType: "application/json",
                             data: JSON.stringify({
 							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
