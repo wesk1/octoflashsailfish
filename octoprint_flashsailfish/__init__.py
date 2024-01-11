@@ -35,6 +35,8 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
                 self._logger.info(f"Directory '{directory_path}' created successfully.")
             except Exception as e:
                 self._logger.exception(f"Error creating directory '{directory_path}': {e}")
+        else:
+            self._logger.debug(f"Directory '{directory_path}' already exists.")
 
     def configure_logging(self):
         """Configure logging."""
@@ -172,8 +174,10 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     # ~~ SettingsPlugin API
     def get_settings_defaults(self):
         return {
-            "base_url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/",
-            "url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml",
+            "base_url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/",  # baseurl to be used for
+            # downloading firmware + relpath from xml file
+            "url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml",  # xml file for
+            # firmware, board,versions info
         }
 
     # ~~ AssetPlugin API
