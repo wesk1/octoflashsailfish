@@ -177,7 +177,7 @@ $(function () {
                             url: "/plugin/flashsailfish/download_firmware",
                             contentType: "application/json",
                             data: JSON.stringify({
-							url: firmwareUrl,
+							url: baseUrl + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
 							destination_dir: "/opt/OctoPrint/flashsailfish/firmwares/"
 							}),
                             success: function() {
