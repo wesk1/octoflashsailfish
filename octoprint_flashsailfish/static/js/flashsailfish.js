@@ -182,12 +182,12 @@ $(function () {
 							}),
                             success: function() {
 							// Set the content of the download message label
-							$("#downloadMessageLabel").text("Firmware download completed successfully!");
+							$("#downloadMessageLabel").html("Firmware download completed successfully!");
 							},
 							error: function(xhr, status, error) {
 							// Handle error if needed
 							console.error("Firmware download failed:", error);
-							$("#downloadMessageLabel").text("Firmware download failed!");
+							$("#downloadMessageLabel").html("Firmware download failed!");
                             }
                         });
                     } else {
