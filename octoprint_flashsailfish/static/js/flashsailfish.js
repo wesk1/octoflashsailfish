@@ -156,7 +156,7 @@ $(function () {
             // Check if a board and version are selected
             if (selectedBoard && selectedVersion) {
                 // Make a GET request to retrieve the firmware information
-                $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
+                $.getJSON("/plugin/flashsailfish/download_firmware", function (data) {
                     // Get the firmware information for the selected board and version
                     const firmwareInfo = data[selectedBoard];
                     const selectedFirmware = firmwareInfo.firmwares[selectedVersion];
