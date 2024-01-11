@@ -176,7 +176,7 @@ $(function () {
                             url: self.settings.settings.plugins.flashsailfish.upload_url,
                             contentType: "application/json",
                             data: JSON.stringify({
-							url: "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/" + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
+							url: firmwareUrl,
 							destination_dir: "/opt/OctoPrint/flashsailfish/firmwares/"
 							}),
                             success: function() {
