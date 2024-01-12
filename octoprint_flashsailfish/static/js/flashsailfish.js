@@ -25,7 +25,7 @@ $(function () {
         self.updateSelectedFileName();
 
         // Separate function to handle file upload
-        self.uploadFirmware = function (url, successCallback, errorCallback) {
+        self.uploadFirmware_click = function (url, successCallback, errorCallback) {
             const fileInput = document.getElementById("fileInput");
 
             // Check if a file is selected
@@ -52,32 +52,26 @@ $(function () {
         };
 
         // Modify flash_firmware to initiate the firmware flashing process
-        self.flash_firmware = function () {
+        //self.flash_firmware = function () {
             // Use the uploadFirmware function to handle the file upload
-            self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
-                console.log("File upload successful:", response);
+           // self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
+              //  console.log("File upload successful:", response);
 
                 // Check if the response contains the uploaded filename
-                if (response && response.filename) {
+              //  if (response && response.filename) {
                     // Update the view model with the uploaded filename
-                    self.uploadedFilename(response.filename);
-                }
+                   // self.uploadedFilename(response.filename);
+              //  }
 
 				 // Add any further actions after a successful upload
                 // (For example, initiate the firmware flashing process here)
-            }, function (error) {
-                console.error("File upload failed:", error);
+          //  }, function (error) {
+           //     console.error("File upload failed:", error);
                 // Handle the error, if necessary
-            });
-        };
-
-        // Function to handle the "Refresh" button click
-       // self.refresh_button_click = function () {
-        //    self.fetch_firmware_info()
-      //  };
+           // });
+       // };
 
         // Function to refresh firmware information
-      //  self.fetch_firmware_info = function () {
         self.refresh_button_click = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
@@ -145,73 +139,51 @@ $(function () {
 			}
 		});
 
-         // Call the function to set up the file input change event
-        self.updateSelectedFileName();
-
-        // Move the download_firmware function outside the fetch_firmware_info function
+        // download firmware function
         self.download_firmware = function () {
-    // Get the selected board and version
-    const selectedBoard = self.board();
-    const selectedVersion = self.version();
-
-    // Check if a board and version are selected
-    if (selectedBoard && selectedVersion) {
-        // Fetch the firmware URL from the plugin settings
-        const baseUrl = self.settings.settings.plugins.flashsailfish.base_url;
-        const firmwareRelativePath = self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath;
-        const firmwareUrl = baseUrl + firmwareRelativePath;
-
-        console.log("Constructed Firmware URL:", firmwareUrl);
-        // Make a GET request to retrieve the firmware content
-    $.ajax({
-        type: "GET",
-        url: firmwareUrl,
-        success: function (firmwareContent) {
-            // Handle success - firmware content is available in the 'firmwareContent' variable
-            console.log("Firmware content:", firmwareContent);
-
             // Get the selected board and version
             const selectedBoard = self.board();
             const selectedVersion = self.version();
 
             // Check if a board and version are selected
             if (selectedBoard && selectedVersion) {
-                // Get the filename from the firmware information
-                const firmwareFilename = self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath.split('/').pop();
+                // Make a GET request to retrieve the firmware information
+                $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
+                    // Get the firmware information for the selected board and version
+                    const firmwareInfo = data[selectedBoard];
+                    const selectedFirmware = firmwareInfo.firmwares[selectedVersion];
+                    // Check if the firmware information is available
+                    if (selectedFirmware) {
+                        // Get the relative path for the firmware
+                        const relpath = selectedFirmware.relpath;
+                        const baseURL = self.settings.settings.plugins.flashsailfish.baseUrl.replace(/\/$/, "");
+                        const firmwareDownloadURL = baseURL + "/" + relpath;
+                        console.log("Constructed Firmware URL:", firmwareDownloadURL);
 
-                // Now, you can save the firmware content to the desired local path with the extracted filename
-                const localPath = "/opt/octoprint/flashsailfish/firmwares/";
-                const fullPath = localPath + firmwareFilename;
-
-                // Example: Save firmware content to the local path
-                // Note: This is a simplified example, and you may need to adjust it based on your actual firmware content
-                saveFirmwareToLocalPath(firmwareContent, fullPath);
-
-                // Set the content of the download message label
-                $("#downloadMessageLabel").text("Firmware download completed successfully!");
+                        // Make a POST request to initiate the firmware download
+                        $.ajax({
+                            type: "GET",
+                            contentType: "application/octet-stream",
+                            url: firmwareDownloadURL,
+                            success: function() {
+							    // Set the content of the download message label
+							    $("#downloadMessageLabel").text("Firmware download completed successfully!");
+							},
+							error: function(xhr, status, error) {
+							    // Handle error if needed
+							    console.error("Firmware download failed:", error);
+							    $("#downloadMessageLabel").text("Firmware download failed!");
+                            }
+                        });
+                    } else {
+                        console.warn("Selected firmware information not available");
+                    }
+                });
             } else {
                 console.warn("No board or version selected");
             }
-        },
-        error: function (xhr, status, error) {
-            // Handle error
-            console.error("Firmware download failed:", error);
-            $("#downloadMessageLabel").text("Firmware download failed!");
-
-            // Log a warning if selected firmware information is not available
-            console.warn("Selected firmware information not available");
-        }
-    });
-};
-
-// New function to save firmware content to the local path
-function saveFirmwareToLocalPath(firmwareContent, fullPath) {
-    // Example: Save firmware content to the local path
-    // Note: This is a simplified example, and you may need to adjust it based on your actual firmware content
-    console.log("Saving firmware to:", fullPath);
-    // Add your logic to save 'firmwareContent' to 'fullPath'
-}
-        
+        };
+    }
 
     // view model class, parameters for constructor, container to bind to
     OCTOPRINT_VIEWMODELS.push([
