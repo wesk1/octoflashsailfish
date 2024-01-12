@@ -71,8 +71,14 @@ $(function () {
             });
         };
 
+        // Function to handle the "Refresh" button click
+       // self.refresh_button_click = function () {
+        //    self.fetch_firmware_info()
+      //  };
+
         // Function to refresh firmware information
-        self.fetch_firmware_info = function () {
+      //  self.fetch_firmware_info = function () {
+        self.refresh_button_click = function () {
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
                 self.refresh_observables();
@@ -138,11 +144,6 @@ $(function () {
 				}
 			}
 		});
-
-        // Function to handle the "Refresh" button click
-        self.refresh_button_click = function () {
-            self.fetch_firmware_info();
-        };
 
          // Call the function to set up the file input change event
         self.updateSelectedFileName();
