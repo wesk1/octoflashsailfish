@@ -1,68 +1,65 @@
 <div id="settings_plugin_flashsailfish">
   <h2>Sailfish Firmware Updater</h2>
-<!-- firmware update url -->
+    <!-- firmware update url -->
 <div class="control-group">
     <div class="controls">
         <div class="input-append">
             <label for="baseURL">{{ _('Base URL:') }}</label>
-            <input type="text" id="baseURL" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.base_url">
+            <input type="text" id="baseURL" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.baseUrl">
         </div>
         <div class="input-append">
             <label for="xmlUrl">{{ _('Xml URL:') }}</label>
             <input type="text" id="xmlUrl" class="input input-xxlarge" data-bind="value: settings.settings.plugins.flashsailfish.url">
-<!-- Modify the click binding to call refresh_button_click -->
             <button class="btn btn-primary" type="button" data-bind="click: refresh_button_click"><i class="icon-refresh"></i></button>
         </div>
     </div>
 </div>
-<!-- Machine picker -->
+    <!-- Machine picker -->
     <div class="control-group">
         <div class="controls">
             <label for="boardSelect">{{ _('Select the board to upgrade:') }}</label>
             <select id="boardSelect" data-bind="options: boards, value: board"></select>
         </div>
     </div>
-<!-- Version picker -->
+    <!-- Version picker -->
 <div class="control-group">
     <div class="controls">
         <label for="versionSelect">{{ _('Select the firmware version:') }}</label>
         <select id="versionSelect" data-bind="options: versions, value: version"></select>
     </div>
 </div>
- <!-- Display Firmware Description -->
+    <!-- Display Firmware Description -->
 <div class="control-group">
     <label for="firmwareDescription">{{ _('Firmware Description:') }}</label>
     <div id="firmwareDescription" data-bind="text: selectedFirmwareDescription"style="margin-top: 5px;color:red;"></div>
 </div>
-<!-- Flash firmware button -->
-<div class="control-group">
-    <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
-</div>
-<!-- Download firmware button -->
+    <!-- Download firmware button -->
     <div class="control-group">
         <button class="btn btn-primary" data-bind="click: download_firmware">{{ _('Download Firmware') }}</button>
-        <!-- Add a label to display download completion message -->
         <label id="downloadMessageLabel" class="control-label" style="margin-top: 5px;color:red;"></label>
     </div>
-<!-- Hex file upload -->
+    <!-- Hex file upload -->
 <div class="control-group">
-    <label class="control-label">{{ _('Custom firmware upload:') }}</label>
+    <label for="selectedFileNameLabel">{{ _('Custom firmware upload:') }}</label>
+    <div id="selectedFileNameLabel" class="control-label" style="margin-top: 5px;color:red;" data-bind="text: selectedFileName"></div>
     <div class="input-prepend">
         <span class="btn fileinput-button">
             <span>{{ _('Browse...') }}</span>
             <input type="file" name="file" data-url="{{ url_for("plugin.flashsailfish.firmware_file") }}" id="fileInput">
         </span>
         <span class="add-on" data-bind="text: firmware_path"></span>
-        <!-- Label to display selected filename -->
-        <label id="selectedFileNameLabel" class="control-label" style="margin-top: 5px;color:red;" data-bind="text: selectedFileName"></label>
     </div>
 </div>
-<!-- Update Custom button -->
+    <!-- Update Custom button -->
 <div class="control-group">
     <button class="btn btn-primary" data-bind="click: Upload_firmware">{{ _('Upload Custom Firmware') }}</button>
 </div>
-<!-- Progress panel -->
+    <!-- Flash firmware button -->
+<div class="control-group">
+    <button class="btn btn-primary" data-bind="click: flash_firmware">{{ _('Flash the printer firmware') }}</button>
+</div>
+    <!-- Progress panel -->
 
-<!-- automatically check for updates and notify -->
+    <!-- automatically check for updates and notify -->
 
 </div>
