@@ -10,18 +10,18 @@ $(function () {
         self.firmware_path = ko.observable();
         self.selectedFirmwareDescription = ko.observable("");
         self.firmware_info = undefined;
-		self.uploadedFilename = ko.observable("");
-		self.selectedFileName = ko.observable("");
+        self.uploadedFilename = ko.observable("");
+        self.selectedFileName = ko.observable("");
 
         // Function to update the label with the selected filename
         self.updateSelectedFileName = function () {
-			// Event listener for file input change
+            // Event listener for file input change
             $("#fileInput").on("change", function () {
                 // Update the label with the selected filename
                 self.selectedFileName(this.files.length > 0 ? this.files[0].name : "");
             });
         };
-		// Call the function to set up the file input change event
+        // Call the function to set up the file input change event
         self.updateSelectedFileName();
 
         // Separate function to handle file upload
@@ -53,23 +53,23 @@ $(function () {
 
         // Modify flash_firmware to initiate the firmware flashing process
         //self.flash_firmware = function () {
-            // Use the uploadFirmware function to handle the file upload
-           // self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
-              //  console.log("File upload successful:", response);
+        // Use the uploadFirmware function to handle the file upload
+        // self.uploadFirmware("/plugin/flashsailfish/firmwares/*.hex", function (response) {
+        //  console.log("File upload successful:", response);
 
-                // Check if the response contains the uploaded filename
-              //  if (response && response.filename) {
-                    // Update the view model with the uploaded filename
-                   // self.uploadedFilename(response.filename);
-              //  }
+        // Check if the response contains the uploaded filename
+        //  if (response && response.filename) {
+        // Update the view model with the uploaded filename
+        // self.uploadedFilename(response.filename);
+        //  }
 
-				 // Add any further actions after a successful upload
-                // (For example, initiate the firmware flashing process here)
-          //  }, function (error) {
-           //     console.error("File upload failed:", error);
-                // Handle the error, if necessary
-           // });
-       // };
+        // Add any further actions after a successful upload
+        // (For example, initiate the firmware flashing process here)
+        //  }, function (error) {
+        //     console.error("File upload failed:", error);
+        // Handle the error, if necessary
+        // });
+        // };
 
         // Function to refresh firmware information
         self.refresh_button_click = function () {
@@ -117,33 +117,34 @@ $(function () {
             }
         });
 
-		// Firmware Description gets updated
-		self.version.subscribe(function (newVersion) {
-			if (newVersion !== undefined && self.firmware_info !== undefined) {
-				const selectedBoard = self.board();
-				const firmwareInfo = self.firmware_info[selectedBoard];
+        // Firmware Description gets updated
+        self.version.subscribe(function (newVersion) {
+            if (newVersion !== undefined && self.firmware_info !== undefined) {
+                const selectedBoard = self.board();
+                const firmwareInfo = self.firmware_info[selectedBoard];
 
-				if (firmwareInfo !== undefined) {
-					const firmwareVersions = firmwareInfo.firmwares;
+                if (firmwareInfo !== undefined) {
+                    const firmwareVersions = firmwareInfo.firmwares;
 
-					if (firmwareVersions !== undefined) {
-						const selectedFirmware = firmwareVersions[newVersion];
+                    if (firmwareVersions !== undefined) {
+                        const selectedFirmware = firmwareVersions[newVersion];
 
-						if (selectedFirmware !== undefined && selectedFirmware.description !== undefined) {
-							self.selectedFirmwareDescription(selectedFirmware.description);
-						} else {
-							self.selectedFirmwareDescription("");
-						}
-					}
-				}
-			}
-		});
+                        if (selectedFirmware !== undefined && selectedFirmware.description !== undefined) {
+                            self.selectedFirmwareDescription(selectedFirmware.description);
+                        } else {
+                            self.selectedFirmwareDescription("");
+                        }
+                    }
+                }
+            }
+        });
 
         // download firmware function
-        self.download_firmware = function () {
+               self.download_firmware = function () {
             // Get the selected board and version
             const selectedBoard = self.board();
             const selectedVersion = self.version();
+            const xmlUrl = self.settings.settings.plugins.flashsailfish.url();
 
             // Check if a board and version are selected
             if (selectedBoard && selectedVersion) {
@@ -152,27 +153,29 @@ $(function () {
                     // Get the firmware information for the selected board and version
                     const firmwareInfo = data[selectedBoard];
                     const selectedFirmware = firmwareInfo.firmwares[selectedVersion];
+                    const firmwareUrl = xmlUrl.replace(/\/firmware\.xml$/, '/');
+
                     // Check if the firmware information is available
                     if (selectedFirmware) {
                         // Get the relative path for the firmware
                         const relpath = selectedFirmware.relpath;
-                        const baseURL = self.settings.settings.plugins.flashsailfish.baseUrl.replace(/\/$/, "");
-                        const firmwareDownloadURL = baseURL + "/" + relpath;
-                        console.log("Constructed Firmware URL:", firmwareDownloadURL);
+                        console.log("Constructed Firmware URL:", firmwareUrl + relpath);
 
                         // Make a POST request to initiate the firmware download
                         $.ajax({
-                            type: "GET",
+                            url: firmwareUrl + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
+                            type: "POST",
                             contentType: "application/octet-stream",
-                            url: firmwareDownloadURL,
+                            processData: false,
+                            destination_dir: "/opt/octoprint/flashsailfish/firmwares/",
                             success: function() {
-							    // Set the content of the download message label
-							    $("#downloadMessageLabel").text("Firmware download completed successfully!");
+							// Set the content of the download message label
+							$("#downloadMessageLabel").text("Firmware download completed successfully!");
 							},
 							error: function(xhr, status, error) {
-							    // Handle error if needed
-							    console.error("Firmware download failed:", error);
-							    $("#downloadMessageLabel").text("Firmware download failed!");
+							// Handle error if needed
+							console.error("Firmware download failed:", error);
+							$("#downloadMessageLabel").text("Firmware download failed!");
                             }
                         });
                     } else {
