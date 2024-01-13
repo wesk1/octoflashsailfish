@@ -174,10 +174,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
     # ~~ SettingsPlugin API
     def get_settings_defaults(self):
         return {
-            "baseUrl": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/",  # baseurl to be used for
-            # downloading firmware + relpath from xml file
-            "url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml",  # xml file for
-            # firmware, board,versions info
+            "url": "https://s3.amazonaws.com/sailfish-firmware.polar3d.com/release/firmware.xml",
         }
 
     # ~~ AssetPlugin API
