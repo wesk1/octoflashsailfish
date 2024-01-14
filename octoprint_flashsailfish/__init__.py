@@ -106,7 +106,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         try:
             data = flask.request.json
             xml_path = data.get("url")
-            destination_dir = "/tmp/"  # Update this to the desired destination
+            destination_dir = "/opt/OctoPrint/flashsailfish/firmwares/"  # Update this to the desired destination
 
             response = requests.get(xml_path)
             firmware_content = response.content
