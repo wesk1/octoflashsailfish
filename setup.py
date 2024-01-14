@@ -14,7 +14,7 @@ plugin_url = "https://github.com/wesk1/octoflashsailfish"
 plugin_license = "GPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
-plugin_requires = ["xmltodict==0.13.0","Flask-CORS==4.0.0",]
+plugin_requires = ["xmltodict==0.13.0",]
 
 #  --------------------------------------------------------------------------------------------------------------------
 #  More advanced options that you usually shouldn't have to touch follow after this point
