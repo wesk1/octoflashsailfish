@@ -170,7 +170,7 @@ $(function () {
                                 url: firmwareUrl + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
                                 destination_dir: "/opt/OctoPrint/flashsailfish/firmwares/"
                             },
-                            success: function(xhr, status, error) {
+                            success: function() {
 							// Set the content of the download message label
 							$("#downloadMessageLabel").text("Firmware download completed successfully!");
 							},
