@@ -112,7 +112,7 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
 
             response = requests.get(xml_path)
             firmware_content = response.content
-            firmware_info = xmltodict.parse(response.txt)
+            firmware_info = xmltodict.parse(response.text)
             relpath = firmware_info["firmware"]["@relpath"]
 
             # Save the firmware to the specified destination directory
