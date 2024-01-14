@@ -73,6 +73,7 @@ $(function () {
 
         // Function to refresh firmware information
         self.refresh_button_click = function () {
+            $("#downloadMessageLabel").text("");
             $.getJSON("/plugin/flashsailfish/firmware_info", function (data) {
                 self.firmware_info = data;
                 self.refresh_observables();
