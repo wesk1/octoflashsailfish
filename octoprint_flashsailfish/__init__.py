@@ -119,12 +119,13 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
             with open(os.path.join(destination_dir, relpath), "wb") as firmware_file:
                 firmware_file.write(firmware_content)
                         
-            self._logger.info(f"Attempting to save firmware as {filename}")
+            self._logger.info(f"Attempting to save firmware as {relpath}")
             self._logger.info(f"Firmware download successful!")
 
             return flask.jsonify({"message": "Firmware download initiated"})
         except Exception as f:
-            self._logger.exception(f"Firmware download initiation failed: {filename}: {f}")
+            self._logger.exception(f"Firmware download initiation failed: {relpath}: {f}")
+						self._logger.info(f"Firmware Info: {self.firmware_info}")
             return flask.make_response("Firmware download initiation failed", 500)
 
     def _firmware_info(self):
