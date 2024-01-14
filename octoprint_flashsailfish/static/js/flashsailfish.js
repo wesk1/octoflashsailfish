@@ -168,7 +168,7 @@ $(function () {
                             proxyurl: "/plugin/flashsailfish/download_firmware",
                             data: {
                                 url: firmwareUrl + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
-                                destination_dir = "/opt/OctoPrint/flashsailfish/firmwares/
+                                destination_dir: "/opt/OctoPrint/flashsailfish/firmwares/"
                             },
                             success: function(xhr, status, error) {
 							// Set the content of the download message label
