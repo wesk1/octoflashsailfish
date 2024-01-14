@@ -163,12 +163,12 @@ $(function () {
 
                         // Make a POST request to initiate the firmware download
                         $.ajax({
-                            url: firmwareUrl + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
-                            type: "POST",
-                            contentType: "application/octet-stream",
-                            processData: false,
-                            destination_dir: "/opt/octoprint/flashsailfish/firmwares/",
-                            success: function() {
+                            type: "GET",
+                            proxyurl: "/plugin/flashsailfish/download_firmware",
+                            data: {
+                                url: firmwareUrl + self.firmware_info[selectedBoard].firmwares[selectedVersion].relpath,
+                            },
+                            success: function(xhr, status, error) {
 							// Set the content of the download message label
 							$("#downloadMessageLabel").text("Firmware download completed successfully!");
 							},
