@@ -99,26 +99,20 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
         self.xml = None
         return self._firmware_info()
 
-    @octoprint.plugin.BlueprintPlugin.route("/download_firmware", methods=["GET"])
+    @octoprint.plugin.BlueprintPlugin.route("/download_firmware", methods=["POST"])
     @octoprint.server.util.flask.restricted_access
     @admin_permission.require(403)
     def download_firmware(self):
         try:
             data = flask.request.json
             xml_path = data.get("url")
-            destination_dir = "/opt/OctoPrint/flashsailfish/firmwares/"  # Update this to the desired destination
+            destination_dir = "/tmp/"  # Update this to the desired destination
 
             response = requests.get(xml_path)
             firmware_content = response.content
-
-            # Extract firmware information from the XML path (modify this logic based on your XML structure)
-            firmware_info = xmltodict.parse(response.text)
-            board_name = firmware_info["board"]["@name"]
-            firmware_name = firmware_info["firmware"]["@name"]
-            firmware_version = firmware_info["firmware"]["@version"]
-
-            # Construct a meaningful filename based on the firmware information
-            filename = f"{board_name}-{firmware_name}-v{firmware_version}.hex"
+            firmware_info = xmltodict.parse(response.txt)
+            relpath = firmware_info["firmware"]["@relpath"]
+            filename = secure_filename(relpath)
 
             # Save the firmware to the specified destination directory
             with open(os.path.join(destination_dir, filename), "wb") as firmware_file:
@@ -127,6 +121,11 @@ class FlashSailfishPlugin(octoprint.plugin.BlueprintPlugin,
             return flask.jsonify({"message": "Firmware download initiated"})
         except Exception as f:
             self._logger.exception(f"Firmware download initiation failed: {firmware_file}: {f}")
+            self._logger.info(f"Attempting to download firmware from {url}")
+            self._logger.info(f"Attempting to download firmware from {tmp}")
+            self._logger.info(f"Attempting to download firmware from {firmware_content}")
+            self._logger.info(f"Attempting to download firmware from {filename}")
+            self._logger.info(f"Attempting to download firmware from {destination_dir}")
             return flask.make_response("Firmware download initiation failed", 500)
 
     def _firmware_info(self):
